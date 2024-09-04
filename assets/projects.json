@@ -1,0 +1,32 @@
+[
+  {
+    "cost": 0,
+    "progress": 0,
+    "name": "Example Project",
+    "description": "Example App Project created through JS",
+    "status": "pending",
+    "userRole": "architect",
+    "finishDate": "2024-09-04T19:57:07.060Z",
+    "id": "dad75adb-6434-4823-b7f4-872c926722f3"
+  },
+  {
+    "cost": 0,
+    "progress": 0,
+    "name": "Proyecto Uno",
+    "description": "Proyecto Uno Description",
+    "status": "Pending",
+    "userRole": "Architect",
+    "finishDate": "2024-09-18T00:00:00.000Z",
+    "id": "1d8ec45b-e5c9-4c9a-8648-1601013d6b29"
+  },
+  {
+    "cost": 0,
+    "progress": 0,
+    "name": "Proyecto Dos",
+    "description": "Proyecto Dos description.",
+    "status": "Finished",
+    "userRole": "Manager",
+    "finishDate": "2024-09-03T00:00:00.000Z",
+    "id": "3d80793a-0802-4b26-8954-9bfc2aa7a4dd"
+  }
+]

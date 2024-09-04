@@ -1,35 +1,30 @@
+//Imports from other js libraries.
 import { IProject, ProjectStatus, UserRole } from "./classes/Project"
 import { ProjectsManager } from "./classes/ProjectsManager"
 
-function showModal(id: string) {
+// Function to toggle the modal
+function toggleModal(id: string, action: 'open' | 'close') {
   const modal = document.getElementById(id)
   if (modal && modal instanceof HTMLDialogElement) {
-    modal.showModal()
+    action === 'open' ? modal.showModal() : modal.close()
   } else {
     console.warn("The provided modal wasn't found. ID: ", id)
   }
 }
 
-function closeModal(id: string) {
-  const modal = document.getElementById(id)
-  if (modal && modal instanceof HTMLDialogElement) {
-    modal.close()
-  } else {
-    console.warn("The provided modal wasn't found. ID: ", id)
-  }
-}
-
+// Gets the projects list container and creates a new projects manager
 const projectsListUI = document.getElementById("projects-list") as HTMLElement
 const projectsManager = new ProjectsManager(projectsListUI)
 
 // This document object is provided by the browser, and its main purpose is to help us interact with the DOM.
 const newProjectBtn = document.getElementById("new-project-btn")
 if (newProjectBtn) {
-  newProjectBtn.addEventListener("click", () => { showModal("new-project-modal") })
+  newProjectBtn.addEventListener("click", () => { toggleModal("new-project-modal", 'open') })
 } else {
   console.warn("New projects button was not found")
 }
 
+// Gets the new project form and adds an event listener to it
 const projectForm = document.getElementById("new-project-form")
 if (projectForm && projectForm instanceof HTMLFormElement) {
   projectForm.addEventListener("submit", (e) => {
@@ -46,7 +41,7 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
       const project = projectsManager.newProject(projectData)
       console.log(project)
       projectForm.reset()
-      closeModal("new-project-modal")
+      toggleModal("new-project-modal", 'close')
     } catch (err) {
       alert(err)
     }
@@ -55,6 +50,7 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
   console.warn("The project form was not found. Check the ID!")
 }
 
+// Gets the export projects button and adds an event listener to it
 const exportProjectsBtn = document.getElementById("export-projects-btn")
 if (exportProjectsBtn) {
   exportProjectsBtn.addEventListener("click", () => {
@@ -62,6 +58,7 @@ if (exportProjectsBtn) {
   })
 }
 
+// Gets the import projects button and adds an event listener to it
 const importProjectsBtn = document.getElementById("import-projects-btn")
 if (importProjectsBtn) {
   importProjectsBtn.addEventListener("click", () => {

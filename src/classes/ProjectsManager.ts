@@ -1,20 +1,22 @@
-import { IProject, Project } from "./Project"
+import { IProject, Project } from "./Project" // Importing project class and interface
 
+// Class for managing projects
 export class ProjectsManager {
   list: Project[] = []
   ui: HTMLElement
-
+  // Constructor for projects manager
   constructor(container: HTMLElement) {
     this.ui = container
     this.newProject({
-      name: "Default Project",
-      description: "This is just a default app project",
+      name: "Example Project",
+      description: "Example App Project stored through JS",
       status: "pending",
       userRole: "architect",
       finishDate: new Date()
     })
   }
 
+  // Method to create a new project
   newProject(data: IProject) {
     const projectNames = this.list.map((project) => {
       return project.name
@@ -37,6 +39,7 @@ export class ProjectsManager {
     return project
   }
 
+  // Method to set the details page
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details")
     if (!detailsPage) { return }
@@ -49,6 +52,7 @@ export class ProjectsManager {
     const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']")
   }
 
+  // Method to get a project by id
   getProject(id: string) {
     const project = this.list.find((project) => {
       return project.id === id
@@ -56,6 +60,7 @@ export class ProjectsManager {
     return project
   }
   
+  // Method to delete a project by id
   deleteProject(id: string) {
     const project = this.getProject(id)
     if (!project) { return }
@@ -66,6 +71,7 @@ export class ProjectsManager {
     this.list = remaining
   }
   
+  // Method to export projects to JSON
   exportToJSON(fileName: string = "projects") {
     const json = JSON.stringify(this.list, null, 2)
     const blob = new Blob([json], { type: 'application/json' })
@@ -77,6 +83,7 @@ export class ProjectsManager {
     URL.revokeObjectURL(url)
   }
   
+  // Method to import projects from JSON
   importFromJSON() {
     const input = document.createElement('input')
     input.type = 'file'

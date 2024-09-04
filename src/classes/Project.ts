@@ -1,8 +1,10 @@
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid' // Importing uuid library to create unique ids for each project
 
+// Types for project status and user role
 export type ProjectStatus = "pending" | "active" | "finished"
-export type UserRole = "architect" | "engineer" | "developer"
+export type UserRole = "architect" | "engineer" | "manager"
 
+// Interface for project data
 export interface IProject {
   name: string
   description: string
@@ -11,12 +13,13 @@ export interface IProject {
   finishDate: Date
 }
 
+// Class for project data
 export class Project implements IProject {
   // To satisfy IProject
   name: string
   description: string
   status: "pending" | "active" | "finished"
-  userRole: "architect" | "engineer" | "developer"
+  userRole: "architect" | "engineer" | "manager"
   finishDate: Date
   
   // Class internals

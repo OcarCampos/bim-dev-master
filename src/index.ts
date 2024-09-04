@@ -25,7 +25,7 @@ const projectsManager = new ProjectsManager(projectsListUI)
 // This document object is provided by the browser, and its main purpose is to help us interact with the DOM.
 const newProjectBtn = document.getElementById("new-project-btn")
 if (newProjectBtn) {
-  newProjectBtn.addEventListener("click", () => {showModal("new-project-modal")})
+  newProjectBtn.addEventListener("click", () => { showModal("new-project-modal") })
 } else {
   console.warn("New projects button was not found")
 }
@@ -52,10 +52,10 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
     }
   })
 } else {
-	console.warn("The project form was not found. Check the ID!")
+  console.warn("The project form was not found. Check the ID!")
 }
 
-const exportProjectsBtn= document.getElementById("export-projects-btn")
+const exportProjectsBtn = document.getElementById("export-projects-btn")
 if (exportProjectsBtn) {
   exportProjectsBtn.addEventListener("click", () => {
     projectsManager.exportToJSON()

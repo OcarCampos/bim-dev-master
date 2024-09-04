@@ -48,17 +48,22 @@ export class ProjectsManager {
     return project //Returns the project
   }
 
-  // Method to set the details page
+  // Method to set the details page according to each project stored in the list
   private setDetailsPage(project: Project) {
-    const detailsPage = document.getElementById("project-details")
-    if (!detailsPage) { return }
-    const name = detailsPage.querySelector("[data-project-info='name']")
-    if (name) { name.textContent = project.name }
-    const description = detailsPage.querySelector("[data-project-info='description']")
-    if (description) { description.textContent = project.description }
-    const cardName = detailsPage.querySelector("[data-project-info='cardName']")
-    if (cardName) { cardName.textContent = project.name }
-    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']")
+    const detailsPage = document.getElementById("project-details") //We call the project details page which contains the variables we want to change
+    if (!detailsPage) { return }  //If the project details page does not exist, return
+    
+    const name = detailsPage.querySelector("[data-project-info='name']") //We call the name of the project
+    if (name) { name.textContent = project.name } //We set the name of the project
+    
+    const description = detailsPage.querySelector("[data-project-info='description']") //We call the description of the project
+    if (description) { description.textContent = project.description } //We set the description of the project
+    
+    const cardName = detailsPage.querySelector("[data-project-info='cardName']") //We call the name of the project card
+    if (cardName) { cardName.textContent = project.name } //We set the name of the project card
+    
+    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']") //We call the description of the project card
+    if (cardDescription) { cardDescription.textContent = project.description } //We set the description of the project card
   }
 
   // Method to get a project by id

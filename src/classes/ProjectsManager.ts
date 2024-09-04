@@ -51,19 +51,65 @@ export class ProjectsManager {
   // Method to set the details page according to each project stored in the list
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details") //We call the project details page which contains the variables we want to change
-    if (!detailsPage) { return }  //If the project details page does not exist, return
-    
+    //If the project details page does not exist, return
+    if (!detailsPage) { 
+      return 
+    }
+        
     const name = detailsPage.querySelector("[data-project-info='name']") //We call the name of the project
-    if (name) { name.textContent = project.name } //We set the name of the project
+    //We set the name of the project
+    if (name) { 
+      name.textContent = project.name 
+    }
     
     const description = detailsPage.querySelector("[data-project-info='description']") //We call the description of the project
-    if (description) { description.textContent = project.description } //We set the description of the project
+    //We set the description of the project
+    if (description) { 
+      description.textContent = project.description 
+    } 
     
     const cardName = detailsPage.querySelector("[data-project-info='cardName']") //We call the name of the project card
-    if (cardName) { cardName.textContent = project.name } //We set the name of the project card
+    //We set the name of the project card
+    if (cardName) { 
+      cardName.textContent = project.name 
+    }
     
     const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']") //We call the description of the project card
-    if (cardDescription) { cardDescription.textContent = project.description } //We set the description of the project card
+     //We set the description of the project card
+    if (cardDescription) { 
+      cardDescription.textContent = project.description 
+    }
+
+    const cardStatus = detailsPage.querySelector("[data-project-info='cardStatus']") //We call the status of the project card
+    //We set the status of the project card
+    if (cardStatus) { 
+      cardStatus.textContent = project.status 
+    } 
+
+    const cardCost = detailsPage.querySelector("[data-project-info='cardCost']") //We call the cost of the project card
+    //We set the cost of the project card
+    if (cardCost) { 
+      cardCost.textContent = project.cost.toString() 
+    } 
+
+    const cardUserRole = detailsPage.querySelector("[data-project-info='cardUserRole']") //We call the user role of the project card
+    //We set the user role of the project card
+    if (cardUserRole) { 
+      cardUserRole.textContent = project.userRole 
+    } 
+
+    //We set the finish date of the project card
+    const cardFinishDate = detailsPage.querySelector("[data-project-info='cardFinishDate']") //We call the finish date of the project card
+    if (cardFinishDate) { 
+      cardFinishDate.textContent = project.finishDate.toString() 
+    } 
+
+    //We set the progress of the project card
+    const cardProgress = detailsPage.querySelector("[data-project-info='cardProgress']") as HTMLElement
+    if (cardProgress) { 
+      cardProgress.textContent = project.progress.toString() + '%'
+      cardProgress.style.width = `${project.progress}%`
+    } 
   }
 
   // Method to get a project by id

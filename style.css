@@ -306,3 +306,73 @@ td{
     padding: 10px;
     color: white;
 }
+
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
+    body {
+        grid-template-columns: 1fr;
+        grid-template-areas: 'content';
+    }
+
+    #sidebar {
+        display: none;
+    }
+
+    .project-list {
+        grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+    }
+
+    #project-details > .main-page-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .project-list {
+        grid-template-columns: 1fr;
+    }
+
+    form {
+        width: 90%;
+    }
+
+    table {
+        font-size: var(--font-sm);
+    }
+
+    th, td {
+        padding: 5px 10px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    h2 {
+        font-size: var(--font-2xl);
+    }
+
+    h3 {
+        font-size: var(--font-xl);
+    }
+
+    h4 {
+        font-size: var(--font-lg);
+    }
+
+    h5 {
+        font-size: var(--font-base);
+    }
+
+    button {
+        font-size: var(--font-sm);
+    }
+
+    .user-active-button,
+    .user-inactive-button {
+        padding: 5px;
+    }
+}

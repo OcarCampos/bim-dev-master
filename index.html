@@ -73,7 +73,7 @@
                             <span class="material-icons-round">calendar_month</span>
                             Finish Date
                             </label>
-                            <input name="finishDate" type="date"></input>
+                            <input name="finishDate" type="date" id="finishDateInput"></input>
                         </div>
                         <!-- Buttons-->
                         <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
@@ -83,6 +83,54 @@
                         </div>
                     </form>
                 </dialog>
+                <!-- Edit project modal-->
+                <dialog id="edit-project-modal">
+                    <form id="edit-project-form">
+                      <h2>Edit Project</h2>
+                      <div class="input-list">
+                        <div class="form-field-container">
+                          <label for="edit-name">Name</label>
+                          <input id="edit-name" name="name" type="text" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-description">Description</label>
+                          <textarea id="edit-description" name="description" required></textarea>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-status">Status</label>
+                          <select id="edit-status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="finished">Finished</option>
+                          </select>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-userRole">User Role</label>
+                          <select id="edit-userRole" name="userRole" required>
+                            <option value="architect">Architect</option>
+                            <option value="engineer">Engineer</option>
+                            <option value="manager">Manager</option>
+                          </select>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-finishDate">Finish Date</label>
+                          <input id="edit-finishDate" name="finishDate" type="date" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-cost">Cost</label>
+                          <input id="edit-cost" name="cost" type="number" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-progress">Progress</label>
+                          <input id="edit-progress" name="progress" type="number" min="0" max="100" required>
+                        </div>
+                      </div>
+                      <div style="display: flex; justify-content: flex-end; padding: 20px; column-gap: 10px;">
+                        <button type="button" id="cancel-edit">Cancel</button>
+                        <button type="submit">Save Changes</button>
+                      </div>
+                    </form>
+                  </dialog>
                 <!-- Header of the projects page-->
                 <header>
                     <!-- Title of the page-->
@@ -116,8 +164,8 @@
                     <!-- Dashboard card-->
                     <div class="dashboard-card" style="padding: 30px 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0px 30px; margin-bottom: 30px;">
-                        <p style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
-                        <button class="btn-secondary"><p style="width: 100%;">Edit</p></button>
+                        <p data-project-info="cardInitials" style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
+                        <button id="edit-project-btn" class="btn-secondary"><p style="width: 100%;">Edit</p></button>
                     </div>
                     <div style="padding: 0 30px;">
                         <div>

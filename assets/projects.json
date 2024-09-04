@@ -6,7 +6,7 @@
     "description": "Example App Project created through JS",
     "status": "Pending",
     "userRole": "Architect",
-    "finishDate": "2024-09-04T19:57:07.060Z",
+    "finishDate": "2024-09-04",
     "id": "dad75adb-6434-4823-b7f4-872c926722f3"
   },
   {
@@ -16,7 +16,7 @@
     "description": "Proyecto Uno Description",
     "status": "Pending",
     "userRole": "Engineer",
-    "finishDate": "2024-09-18T00:00:00.000Z",
+    "finishDate": "2024-09-18",
     "id": "1d8ec45b-e5c9-4c9a-8648-1601013d6b29"
   },
   {
@@ -26,7 +26,7 @@
     "description": "Proyecto Dos description.",
     "status": "Finished",
     "userRole": "Manager",
-    "finishDate": "2024-09-03T00:00:00.000Z",
+    "finishDate": "2024-09-03",
     "id": "3d80793a-0802-4b26-8954-9bfc2aa7a4dd"
   }
 ]

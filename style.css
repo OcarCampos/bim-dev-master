@@ -275,3 +275,34 @@ input:focus, textarea:focus, select:focus {
 .todo-item:hover {
   background-color: var(--primary);
 }
+
+@media screen and (max-width: 768px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'content';
+  }
+
+  #sidebar {
+    display: none;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 15px;
+  }
+
+  #projects-list {
+    grid-template-columns: 1fr;
+  }
+
+  #project-details > .main-page-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  form {
+    width: 90%;
+  }
+}

@@ -6,14 +6,13 @@ export class ProjectsManager {
 
   constructor(container: HTMLElement) {
     this.ui = container
-    const project = this.newProject({
+    this.newProject({
       name: "Default Project",
       description: "This is just a default app project",
       status: "pending",
       userRole: "architect",
       finishDate: new Date()
     })
-    project.ui.click()
   }
 
   newProject(data: IProject) {

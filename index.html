@@ -12,11 +12,13 @@
     <body>
         <!-- Sidebar of the page-->
         <aside id="sidebar">
-        <img id="company-logo" src="./assets/company-logo.svg" alt="Construction Company">
-        <ul id="nav-buttons">
-            <li id="projects-btn"><span class="material-icons-round">apartment</span>Projects</li>
-            <li id="users-btn"><span class="material-icons-round">people</span>Users</li>
-        </ul>
+            <!-- Company logo-->
+            <img id="company-logo" src="./assets/company-logo.svg" alt="Construction Company">
+            <!-- Sidebar buttons-->
+            <ul id="nav-buttons">
+                <li id="projects-btn"><span class="material-icons-round">apartment</span>Project List</li>
+                <li id="users-btn"><span class="material-icons-round">people</span>Users List</li>
+            </ul>
         </aside>
         <!-- Main content of the page-->
         <main id="content">
@@ -83,54 +85,6 @@
                         </div>
                     </form>
                 </dialog>
-                <!-- Edit project modal-->
-                <dialog id="edit-project-modal">
-                    <form id="edit-project-form">
-                      <h2>Edit Project</h2>
-                      <div class="input-list">
-                        <div class="form-field-container">
-                          <label for="edit-name">Name</label>
-                          <input id="edit-name" name="name" type="text" required>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-description">Description</label>
-                          <textarea id="edit-description" name="description" required></textarea>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-status">Status</label>
-                          <select id="edit-status" name="status" required>
-                            <option value="pending">Pending</option>
-                            <option value="active">Active</option>
-                            <option value="finished">Finished</option>
-                          </select>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-userRole">User Role</label>
-                          <select id="edit-userRole" name="userRole" required>
-                            <option value="architect">Architect</option>
-                            <option value="engineer">Engineer</option>
-                            <option value="manager">Manager</option>
-                          </select>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-finishDate">Finish Date</label>
-                          <input id="edit-finishDate" name="finishDate" type="date" required>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-cost">Cost</label>
-                          <input id="edit-cost" name="cost" type="number" required>
-                        </div>
-                        <div class="form-field-container">
-                          <label for="edit-progress">Progress</label>
-                          <input id="edit-progress" name="progress" type="number" min="0" max="100" required>
-                        </div>
-                      </div>
-                      <div style="display: flex; justify-content: flex-end; padding: 20px; column-gap: 10px;">
-                        <button type="button" id="cancel-edit">Cancel</button>
-                        <button type="submit">Save Changes</button>
-                      </div>
-                    </form>
-                  </dialog>
                 <!-- Header of the projects page-->
                 <header>
                     <!-- Title of the page-->
@@ -148,14 +102,62 @@
                 </div>
             </div>
             <!-- Project details page-->
-            <div class="page" id="project-details" style="display: none">
+            <div class="page" id="project-details" style="display: none;">
+                <!-- Edit project modal-->
+                <dialog id="edit-project-modal">
+                    <form id="edit-project-form">
+                      <h2>Edit Project</h2>
+                      <div class="input-list">
+                        <div class="form-field-container">
+                          <label for="edit-name">Name</label>
+                          <input id="edit-name" name="name" type="text" placeholder="Awesome Example Project" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-description">Description</label>
+                          <textarea id="edit-description" name="description" placeholder="Describe your project here" required></textarea>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-status">Status</label>
+                          <select id="edit-status" name="edit-status">
+                            <option value="pending">pending</option>
+                            <option value="active">active</option>
+                            <option value="finished">finished</option>
+                          </select>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-userRole">User Role</label>
+                          <select id="edit-userRole" name="userRole" required>
+                            <option value="architect">Architect</option>
+                            <option value="engineer">Engineer</option>
+                            <option value="manager">Manager</option>
+                          </select>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-finishDate">Finish Date</label>
+                          <input id="edit-finishDate" name="finishDate" type="date" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-cost">Cost</label>
+                          <input id="edit-cost" name="cost" type="number" placeholder="2542000" required>
+                        </div>
+                        <div class="form-field-container">
+                          <label for="edit-progress">Progress</label>
+                          <input id="edit-progress" name="progress" type="number" min="0" max="100" placeholder="100" required>
+                        </div>
+                      </div>
+                      <div style="display: flex; justify-content: flex-end; padding: 20px; column-gap: 10px;">
+                        <button type="button" id="cancel-edit">Cancel</button>
+                        <button type="submit">Save Changes</button>
+                      </div>
+                    </form>
+                </dialog>
                 <!-- Header of the project details page-->
                 <header>
-                <!-- Title of the page-->
-                <div>
-                    <h2 data-project-info="name">Example Project</h2>
-                    <p data-project-info="description" style="color: #969696">Example Project located wherever you want.</p>
-                </div>
+                    <!-- Title of the page-->
+                    <div>
+                        <h2 data-project-info="name">Example Project</h2>
+                        <p data-project-info="description" style="color: #969696">Example Project located wherever you want.</p>
+                    </div>
                 </header>
                 <!-- Main content of the project details page-->
                 <div class="main-page-content">
@@ -220,6 +222,106 @@
                     </div>
                 </div>
                 <div id="viewer-container" class="dashboard-card"></div>
+                </div>
+            </div>
+             <!-- Div to show User's page -->
+            <div class="page" id="project-users" style="display: none;">
+                <!-- This is the modal for a new project-->
+                <dialog id="add-user-modal">
+                    <form>
+                        <h2>Add New User</h2>
+                        <div class="input-list">
+                            <div class="form-field-container">
+                                <label><span class="material-icons-round">person</span>Full Name</label>
+                                <input type="text">
+                            </div>
+                            <div class="form-field-container">
+                                <label><span class="material-icons-round">account_circle</span>User Name</label>
+                                <input type="text">
+                                <span class="hint">Username must be a short and must not contain special characters.</span>
+                            </div>
+                            <div class="form-field-container">
+                                <label><span class="material-icons-round">alternate_email</span>email</label>
+                                <input type="email">
+                                <span class="hint">Name must be a short one!</span>
+                            </div>
+                            <div class="form-field-container">
+                                <label><span class="material-icons-round">cake</span>Birth date</label>
+                                <input type="date" id="finish-date" name="finish-date">
+                            </div>
+                        </div>
+                        <div>
+                            <span class="hint" style="padding: 20px 40px;">A confirmation email will arrive to your inbox once the account is created. Please validate your email
+                                and then access the webpage to customize your account information, profile picture and other information.</span>
+                        </div>
+                        <div class="form-button-container">
+                            <button class="form-button">Cancel</button>
+                            <button class="form-button">Add User</button>
+                        </div>
+                    </form>
+                </dialog>
+                <!-- Header for User's page-->
+                <header>
+                    <div style="width: 100%;">
+                        <h2>User's List Page</h2>
+                        <p style="color: #969696">List of users registered on this page</p>
+                    </div>
+                </header>
+                <!-- User's list div-->
+                <div style="height: 100%;">
+                    <!-- Search User Bar & Add user button-->
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <div style="padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
+                            <span class="material-icons-round">search</span>
+                            <input type="text" placeholder="Search User" style="width: 100%;">
+                        </div>
+                        <div>
+                            <span class="material-icons-round">add</span><button>Add User</button>
+                        </div>
+                    </div>
+                    <!-- Table with users-->
+                    <table class="user_list_table">
+                        <!-- Header of the table-->
+                        <tr>
+                            <th>ID</th>
+                            <th>Profile Picture</th>
+                            <th>Full Name</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Last Seen</th>
+                            <th>Status</th>
+                        </tr>
+                        <!-- Data in the table-->
+                        <tr>
+                            <td>001</td>
+                            <td><img id="user-avatar" src="./assets/avatar.png" width="50" height="50"></td>
+                            <td>O'car Campos</td>
+                            <td>ocar.campos</td>
+                            <td><a href="mailto:ocar.campos@attitude.cl">ocar.campos@attitude.cl</a></td>
+                            <td>February 13th, 2024</td>
+                            <td><li class="user-active-button">Active</li></td>
+                        </tr>
+                        <!-- Data in the table-->
+                        <tr>
+                            <td>002</td>
+                            <td><img id="user-avatar" src="./assets/avatar.png" width="50" height="50"></td>
+                            <td>Juan Hoyos</td>
+                            <td>juan.hoyos</td>
+                            <td><a href="mailto:asdf@gmail.com">asdf@gmail.com</a></td>
+                            <td>January 11th, 2024</td>
+                            <td><li class="user-active-button">Active</li></td>
+                        </tr>
+                        <!-- Data in the table-->
+                        <tr>
+                            <td>003</td>
+                            <td><img id="user-avatar" src="./assets/avatar.png" width="50" height="50"></td>
+                            <td>Antonio Viegas</td>
+                            <td>antonio.viegas</td>
+                            <td><a href="mailto:asdf@gmail.com">asdf@gmail.com</a></td>
+                            <td>November 3rd, 2023</td>
+                            <td><li class="user-inactive-button">Inactive</li></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </main>

@@ -2,9 +2,10 @@
 import { IProject, ProjectStatus, UserRole } from "./classes/Project";
 import { ProjectsManager } from "./classes/ProjectsManager";
 
-// Function to toggle open/close any modal by its id
+/*
+ * Function to toggle the visibility of a modal
+ */
 function toggleModal(id: string, action: 'open' | 'close', errorMessage?: string) {
-  console.log(`Attempting to ${action} modal with id: ${id}`);
   const modal = document.getElementById(id);
   if (modal && modal instanceof HTMLDialogElement) {
     if (action === 'open') {
@@ -23,11 +24,16 @@ function toggleModal(id: string, action: 'open' | 'close', errorMessage?: string
   }
 }
 
-// Gets the projects list container from index.html and creates a new projects manager element to handle the projects list
+/*
+ * Gets the projects list container from index.html and creates 
+ * a new projects manager element to handle the projects list
+ */
 const projectsListUI = document.getElementById("projects-list") as HTMLElement;
 const projectsManager = new ProjectsManager(projectsListUI);
 
-// Gets the new project button and adds an event listener to it to open the new project modal
+/*
+ * Event Listeners for showing the new project modal
+ */
 const newProjectBtn = document.getElementById("new-project-btn");
 if (newProjectBtn) {
   newProjectBtn.addEventListener("click", () => { toggleModal("new-project-modal", 'open'); });
@@ -35,9 +41,117 @@ if (newProjectBtn) {
   console.warn("New projects button was not found");
 }
 
-// Defines the project form and adds an event listener to it to allow populating the project manager with a new project
+/*
+ * Set default date for finish date input in new project modal
+ */
+const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
+if (finishDateInput) {
+  const defaultDate = new Date();
+  defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now
+  finishDateInput.valueAsDate = defaultDate;
+}
+
+/*
+ * Event Listeners for canceling the new project modal
+ */
+const cancelNewProjectBtn = document.getElementById("cancel-new-project-btn");
+if (cancelNewProjectBtn) {
+  cancelNewProjectBtn.addEventListener("click", () => { 
+    toggleModal("new-project-modal", 'close');
+    const projectForm = document.getElementById("new-project-form") as HTMLFormElement;
+    if (projectForm) {
+      projectForm.reset(); //resets the form
+    }
+  });
+} else {
+  console.warn("The cancel new project button was not found. Check the ID!");
+}
+
+/*
+ * Event Listeners for showing the edit project modal
+ */
+const editProjectBtn = document.getElementById("edit-project-btn");
+if (editProjectBtn) {
+  editProjectBtn.addEventListener("click", () => { toggleModal("edit-project-modal", 'open'); });
+} else {
+  console.warn("Edit project button was not found");
+}
+
+/*
+ * Event Listeners for canceling the edit project modal
+ */
+const cancelEditBtn = document.getElementById("cancel-edit");
+if (cancelEditBtn) {
+  cancelEditBtn.addEventListener("click", () => {
+    const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
+    if (modal) modal.close();
+  });
+}
+
+/*
+ * Event Listeners for closing the error modal
+ */
+const closeErrorModalBtn = document.getElementById("close-error-modal");
+if (closeErrorModalBtn) {
+  closeErrorModalBtn.addEventListener("click", () => {
+    toggleModal("error-modal", 'close');
+  });
+} else {
+  console.warn("The close error modal button was not found. Check the ID!");
+}
+
+/*
+ * Event Listeners for export and import projects
+ */
+const exportProjectsBtn = document.getElementById("export-projects-btn");
+if (exportProjectsBtn) {
+  exportProjectsBtn.addEventListener("click", () => {
+    projectsManager.exportToJSON();
+  });
+}
+
+const importProjectsBtn = document.getElementById("import-projects-btn");
+if (importProjectsBtn) {
+  importProjectsBtn.addEventListener("click", () => {
+    projectsManager.importFromJSON();
+  });
+}
+
+/*
+ * Event Listeners for buttons
+ */
+function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
+  const button = document.getElementById(buttonId);
+  if (button) {
+    button.addEventListener("click", () => {
+      const showPage = document.getElementById(showPageId);
+      if (showPage) {
+        showPage.style.display = "flex";
+      }
+
+      hidePageId.forEach(hidePageId => {
+        const hidePage = document.getElementById(hidePageId);
+        if (hidePage) {
+          hidePage.style.display = "none";
+        }
+      });
+    });
+  } else {
+    console.warn(`The button ${buttonId} was not found. Check the ID!`);
+  }
+}
+
+// Buttons
+btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
+btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
+btnClick("details-btn", "project-details", ["projects-page", "project-users"]);
+
+
+/*
+ * Event Listeners handling the submit of the new project modal
+ */
 const projectForm = document.getElementById("new-project-form");
-if (projectForm && projectForm instanceof HTMLFormElement) { //If form exists and is of type HTMLFormElement
+if (projectForm && projectForm instanceof HTMLFormElement) { 
   projectForm.addEventListener("submit", (e) => {  //event listener for when the form is submitted
     e.preventDefault(); //Prevents the default behavior of the form (page reload)
     const formData = new FormData(projectForm); //Creates a new FormData object with the form's data
@@ -63,73 +177,9 @@ if (projectForm && projectForm instanceof HTMLFormElement) { //If form exists an
   console.warn("The project form was not found. Check the ID!");
 }
 
-// Gets the cancel button from the new project modal and adds an event listener to it to close the modal
-const cancelNewProjectBtn = document.getElementById("cancel-new-project-btn");
-if (cancelNewProjectBtn) {
-  cancelNewProjectBtn.addEventListener("click", () => { 
-    toggleModal("new-project-modal", 'close');
-    // Reset the form if needed
-    const projectForm = document.getElementById("new-project-form") as HTMLFormElement;
-    if (projectForm) {
-      projectForm.reset();
-    }
-  });
-} else {
-  console.warn("The cancel new project button was not found. Check the ID!");
-}
-
-// Gets the close error modal button and adds an event listener to it to close the modal
-const closeErrorModalBtn = document.getElementById("close-error-modal");
-if (closeErrorModalBtn) {
-  closeErrorModalBtn.addEventListener("click", () => {
-    toggleModal("error-modal", 'close');
-  });
-} else {
-  console.warn("The close error modal button was not found. Check the ID!");
-}
-
-
-// Gets the export projects button and adds an event listener to it to 
-// call the exportToJSON method from the projects manager class.
-const exportProjectsBtn = document.getElementById("export-projects-btn");
-if (exportProjectsBtn) {
-  exportProjectsBtn.addEventListener("click", () => {
-    projectsManager.exportToJSON();
-  });
-}
-
-// Gets the import projects button and adds an event listener to it to
-// call the importFromJSON method from the projects manager class.
-const importProjectsBtn = document.getElementById("import-projects-btn");
-if (importProjectsBtn) {
-  importProjectsBtn.addEventListener("click", () => {
-    projectsManager.importFromJSON();
-  });
-}
-
-// When the user clicks on the projects sidebar button, the projects page is displayed
-const projectsSidebarBtn = document.getElementById("projects-btn");
-if (projectsSidebarBtn) {
-  projectsSidebarBtn.addEventListener("click", () => {
-      //Gets the projects page and the project details page
-      const projectsPage = document.getElementById("projects-page");
-      const detailsPage = document.getElementById("project-details");
-      //If the projects page or the project details page do not exist, return
-      if (!(projectsPage && detailsPage)) { return; }
-      //Hides the details page and displays the project list page
-      detailsPage.style.display = "none";
-      projectsPage.style.display = "flex";
-  });
-}
-
-// Set default date for finish date input
-const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
-if (finishDateInput) {
-  const defaultDate = new Date();
-  defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now
-  finishDateInput.valueAsDate = defaultDate;
-}
-
+/*
+ * Event Listeners for handling the submit of the edit project modal
+ */
 const editProjectForm = document.getElementById("edit-project-form") as HTMLFormElement;
 if (editProjectForm) {
   editProjectForm.addEventListener("submit", (e) => {
@@ -138,10 +188,3 @@ if (editProjectForm) {
   });
 }
 
-const cancelEditBtn = document.getElementById("cancel-edit");
-if (cancelEditBtn) {
-  cancelEditBtn.addEventListener("click", () => {
-    const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
-    if (modal) modal.close();
-  });
-}

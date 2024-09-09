@@ -1,17 +1,21 @@
-import { IProject, Project, ProjectStatus, UserRole } from "./Project"; // Importing project class and interface
+import { IProject, Project, ProjectStatus, UserRole, Statuses, userRoles } from "./Project"; // Importing project class and interface
 
-// Class for managing projects
+/*
+ * Class for managing projects
+ */
 export class ProjectsManager {
   list: Project[] = []; //list of projects
   ui: HTMLElement; //UI element for the project cards
 
-  // Constructor for project cards
+  /*
+   * Constructor for project cards
+   */
   constructor(container: HTMLElement) {
     this.ui = container;  //Creating the container for the project cards
     this.newProject({    //Creating a default project card
       name: "Example Project",
       description: "Example App Project created through JS",
-      status: "pending",
+      status: "finished",
       userRole: "architect",
       finishDate: new Date(),
       cost: 0,
@@ -19,9 +23,11 @@ export class ProjectsManager {
     });
   }
 
-  // Method to create a new project
+  /*
+   * Method to create a new project
+   */
   newProject(data: IProject) {
-    //Maps the names of the projects in the list to projectNames
+    //List of the names of the projects in the list
     const projectNames = this.list.map((project) => {
       return project.name;
     });
@@ -30,141 +36,150 @@ export class ProjectsManager {
       throw new Error("The name of the project must be at least 5 characters long.");
     }
     //Checks if the name of the new project is already in use
-    const nameInUse = projectNames.includes(data.name);
-    if (nameInUse) {
+    if (projectNames.includes(data.name)) {
       throw new Error(`A project with the name "${data.name}" already exists. Try a different name.`);
     }
     //Creates a new project with the data provided
     const project = new Project(data);
-    //Adds an event listener to the project card to display the project details page
+    //Adds an event listener to the project card html element to display the project details page
     project.ui.addEventListener("click", () => {
-      //Gets the projects page and the project details page
       const projectsPage = document.getElementById("projects-page");
       const detailsPage = document.getElementById("project-details");
-      //If the projects page or the project details page do not exist, return
       if (!(projectsPage && detailsPage)) { return; }
-      //Hides the projects page and displays the project details page
       projectsPage.style.display = "none";
       detailsPage.style.display = "flex";
-      //Sets the details page with the project's data
+      //Updates the details page with the current project's data
       this.setDetailsPage(project);
+      this.setEditModal(project);
     });
     this.ui.append(project.ui); //Adds the project card to the UI
     this.list.push(project); //Adds the project to the list
     return project; //Returns the project
   }
 
-  // Method to set the details page according to each project stored in the list
+  /*
+   * Method to set the details page according to project details.
+   * Method is private because it is only used internally by the class.
+   */
   private setDetailsPage(project: Project) {
-    const detailsPage = document.getElementById("project-details"); //We call the project details page which contains the variables we want to change
-    //If the project details page does not exist, return
+    const detailsPage = document.getElementById("project-details");
     if (!detailsPage) { 
       return; 
     }
     
-    //We call the variables we want to change
-    const name = detailsPage.querySelector("[data-project-info='name']"); //We call the name of the project
-    const description = detailsPage.querySelector("[data-project-info='description']"); //We call the description of the project
-    const cardName = detailsPage.querySelector("[data-project-info='cardName']"); //We call the name of the project card
-    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']"); //We call the description of the project card
-    const cardStatus = detailsPage.querySelector("[data-project-info='cardStatus']"); //We call the status of the project card
-    const cardCost = detailsPage.querySelector("[data-project-info='cardCost']"); //We call the cost of the project card
-    const cardUserRole = detailsPage.querySelector("[data-project-info='cardUserRole']"); //We call the user role of the project card
-    const cardFinishDate = detailsPage.querySelector("[data-project-info='cardFinishDate']"); //We call the finish date of the project card
+    //Variables to change in details page
+    const name = detailsPage.querySelector("[data-project-info='name']"); 
+    const description = detailsPage.querySelector("[data-project-info='description']"); 
+    const cardName = detailsPage.querySelector("[data-project-info='cardName']"); 
+    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']"); 
+    const cardStatus = detailsPage.querySelector("[data-project-info='cardStatus']"); 
+    const cardCost = detailsPage.querySelector("[data-project-info='cardCost']"); 
+    const cardUserRole = detailsPage.querySelector("[data-project-info='cardUserRole']"); 
+    const cardFinishDate = detailsPage.querySelector("[data-project-info='cardFinishDate']"); 
     const cardProgress = detailsPage.querySelector("[data-project-info='cardProgress']") as HTMLElement;
     const cardInitials = detailsPage.querySelector("[data-project-info='cardInitials']") as HTMLElement;
 
-    //Renaming our variables in the html
-    //We set the name of the project
+    //Renaming details page html
     if (name) { 
       name.textContent = project.name; 
     }
-    //We set the description of the project
     if (description) { 
       description.textContent = project.description; 
     } 
-    //We set the name of the project card
     if (cardName) { 
       cardName.textContent = project.name; 
     }
-    //We set the description of the project card
     if (cardDescription) { 
       cardDescription.textContent = project.description; 
     }
-    //We set the status of the project card
     if (cardStatus) { 
       cardStatus.textContent = project.status; 
     } 
-    //We set the cost of the project card
     if (cardCost) { 
       cardCost.textContent = project.cost.toString(); 
     } 
-    //We set the user role of the project card
     if (cardUserRole) { 
       cardUserRole.textContent = project.userRole; 
     } 
-    //We set the finish date of the project card
     if (cardFinishDate) { 
       cardFinishDate.textContent = project.finishDate.toString(); 
     } 
-    //We set the progress of the project card
     if (cardProgress) { 
       cardProgress.textContent = project.progress.toString() + '%';
       cardProgress.style.width = `${project.progress}%`;
     } 
-    //We set the initials of the project card
     if (cardInitials) { 
       cardInitials.textContent = project.initials; 
     }
-
-    //We add an event listener to the edit button to open the edit modal
-    const editButton = detailsPage.querySelector("#edit-project-btn");
-    if (editButton) {
-      editButton.addEventListener("click", () => {
-        console.log("Edit button clicked");
-        this.openEditModal(project);
-      });
-    }
   }
 
-  // Method to open the edit modal and populate it with the project's data
-  private openEditModal(project: Project) {
-    console.log("Inside openEditModal");
-    const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
-    if (!modal) return;
-  
-    const form = document.getElementById("edit-project-form") as HTMLFormElement;
-    if (form) {
-      console.log("Form found, populating it");
-      (form.elements.namedItem("name") as HTMLInputElement).value = project.name;
-      (form.elements.namedItem("description") as HTMLTextAreaElement).value = project.description;
-      (form.elements.namedItem("status") as HTMLSelectElement).value = project.status;
-      (form.elements.namedItem("userRole") as HTMLSelectElement).value = project.userRole;
-      const finishDate = project.finishDate instanceof Date ? project.finishDate : new Date(project.finishDate);
-      (form.elements.namedItem("finishDate") as HTMLInputElement).value = finishDate.toISOString().split('T')[0];
-      (form.elements.namedItem("cost") as HTMLInputElement).value = project.cost.toString();
-      (form.elements.namedItem("progress") as HTMLInputElement).value = project.progress.toString();
-      console.log("Form populated with project data");
-  
-      // Remove any existing submit event listeners
-      form.removeEventListener('submit', this.handleEditFormSubmit.bind(this, project));
-  
-      // Add a new submit event listener
-      const submitHandler = (e: Event) => {
-        console.log("Form submit event triggered");
-        e.preventDefault();
-        this.handleEditFormSubmit(e, project);
-        modal.close();
-        console.log("Modal closed");
-      };
-  
-      form.addEventListener('submit', submitHandler);
-      console.log("New submit event listener added");
+  /*
+   * Method to set the edit modal according to project details.
+   * Method is private because it is only used internally by the class.
+   */
+  private setEditModal(project: Project) {
+     //Variables to change in edit modal
+     const editName = document.getElementById("edit-name") as HTMLInputElement;
+     const editDescription = document.getElementById("edit-description") as HTMLTextAreaElement;
+     const editStatus = document.getElementById("edit-status") as HTMLSelectElement;
+     const editUserRole = document.getElementById("edit-userRole") as HTMLSelectElement;
+     const editFinishDate = document.getElementById("edit-finishDate") as HTMLInputElement;
+     const editCost = document.getElementById("edit-cost") as HTMLInputElement;
+     const editProgress = document.getElementById("edit-progress") as HTMLInputElement;
+
+     // Renaming edit modal html
+    if (editName) { 
+      editName.value = project.name; 
     }
-  
-    console.log("Showing modal");
-    modal.showModal();
-    console.log("Modal shown");
+    if (editDescription) { 
+      editDescription.value = project.description; 
+    }
+    if (editStatus) { 
+      // Clear current options and replace with project information
+      editStatus.innerHTML = "";
+      const defaultOption = document.createElement("option");
+      defaultOption.value = project.status;
+      defaultOption.textContent = project.status;
+      defaultOption.selected = true;
+      editStatus.appendChild(defaultOption);
+      // Create and add other options
+      Object.values(Statuses).forEach((status) => {
+        if (status !== project.status) {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          editStatus.appendChild(option);
+        }
+      });
+    }
+    if (editUserRole) { 
+      // Clear current options and replace with project information
+      editUserRole.innerHTML = "";
+      const defaultOption = document.createElement("option");
+      defaultOption.value = project.userRole;
+      defaultOption.textContent = project.userRole;
+      defaultOption.selected = true;
+      editUserRole.appendChild(defaultOption);
+      // Create and add other options
+      Object.values(userRoles).forEach((role) => {
+        if (role !== project.userRole) {
+          const option = document.createElement("option");
+          option.value = role;
+          option.textContent = role;
+          editUserRole.appendChild(option);
+        }
+      });
+    }
+    if (editFinishDate) { 
+      const finishDate = project.finishDate instanceof Date ? project.finishDate : new Date(project.finishDate);
+      editFinishDate.value = finishDate.toISOString().split('T')[0];
+    }
+    if (editCost) { 
+      editCost.value = project.cost.toString(); 
+    }
+    if (editProgress) { 
+      editProgress.value = project.progress.toString(); 
+    }
   }
 
   // Method to handle the edit form submission

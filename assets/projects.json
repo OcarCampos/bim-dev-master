@@ -2,10 +2,10 @@
   {
     "cost": 0,
     "progress": 0,
-    "name": "Example Project",
-    "description": "Example App Project created through JS",
-    "status": "Pending",
-    "userRole": "Architect",
+    "name": "Proyecto de Ejemplo",
+    "description": "Proyecto de Ejemplo creado a través de JS",
+    "status": "pending",
+    "userRole": "architect",
     "finishDate": "2024-09-04",
     "id": "dad75adb-6434-4823-b7f4-872c926722f3"
   },
@@ -14,18 +14,18 @@
     "progress": 20,
     "name": "Proyecto Uno",
     "description": "Proyecto Uno Description",
-    "status": "Pending",
-    "userRole": "Engineer",
+    "status": "pending",
+    "userRole": "engineer",
     "finishDate": "2024-09-18",
     "id": "1d8ec45b-e5c9-4c9a-8648-1601013d6b29"
   },
   {
-    "cost": 20000,
-    "progress": 100,
+    "cost": 25000,
+    "progress": 95,
     "name": "Proyecto Dos",
     "description": "Proyecto Dos description.",
-    "status": "Finished",
-    "userRole": "Manager",
+    "status": "finished",
+    "userRole": "manager",
     "finishDate": "2024-09-03",
     "id": "3d80793a-0802-4b26-8954-9bfc2aa7a4dd"
   }

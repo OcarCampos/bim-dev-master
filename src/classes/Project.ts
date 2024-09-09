@@ -4,7 +4,19 @@ import { v4 as uuidv4 } from 'uuid'; // Importing uuid library to create unique 
 export type ProjectStatus = "pending" | "active" | "finished";
 export type UserRole = "architect" | "engineer" | "manager";
 
-// Interface for project data. Describes the structure of the project object
+export enum Statuses {
+  pending = "pending",
+  active = "active",
+  finished = "finished"
+}
+export enum userRoles {
+  architect = "architect",
+  engineer = "engineer",
+  manager = "manager"
+}
+/*
+ * Interface for project data. Describes the structure of the project object
+ */
 export interface IProject {
   name: string;
   description: string;
@@ -15,13 +27,15 @@ export interface IProject {
   progress: number;
 }
 
-// Class for project data
+/*
+ * Class for project data
+ */
 export class Project implements IProject {
   // Object template properties
   name: string;
   description: string;
-  status: "pending" | "active" | "finished";
-  userRole: "architect" | "engineer" | "manager";
+  status: Statuses;
+  userRole: userRoles;
   finishDate: Date;
   
   // Class internals

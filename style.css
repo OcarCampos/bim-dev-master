@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@100;300;400&display=swap');
 
 :root {
   --primary: #029AE0;
@@ -19,7 +19,7 @@
 }
 
 * {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
   font-size: var(--font-base);
@@ -110,6 +110,15 @@ button:hover {
 
 #nav-buttons li:hover {
   background-color: var(--primary);
+}
+
+span.material-icons-round {
+  margin-right: 1vw;
+}
+
+span.hint {
+  color: gray;
+  font-size: var(--font-sm);
 }
 
 /* Content styles */
@@ -319,4 +328,114 @@ input:focus, textarea:focus, select:focus {
 
 .todo-item:hover {
   background-color: var(--primary);
+}
+
+/* Style for user list table and modal */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+th {
+  border-top: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  border-radius: 5px;
+  padding: 10px 20px;
+}
+
+td {
+  border-top: 2px solid var(--primary-200);
+  border-bottom: 2px solid var(--primary-200);
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: gray;
+  font-size: var(--font-lg);
+}
+
+.user-active-button {
+  list-style: none;
+  background-color: green;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+}
+
+.user-inactive-button {
+  list-style: none;
+  background-color: grey;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'content';
+  }
+
+  #sidebar {
+    display: none;
+  }
+
+  .project-list {
+    grid-template-columns: repeat(auto-fill, minmax(45%, 1fr));
+  }
+
+  #project-details > .main-page-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .project-list {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    width: 90%;
+  }
+
+  table {
+    font-size: var(--font-sm);
+  }
+
+  th, td {
+    padding: 5px 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h2 {
+    font-size: var(--font-2xl);
+  }
+
+  h3 {
+    font-size: var(--font-xl);
+  }
+
+  h4 {
+    font-size: var(--font-lg);
+  }
+
+  h5 {
+    font-size: var(--font-base);
+  }
+
+  button {
+    font-size: var(--font-sm);
+  }
+
+  .user-active-button,
+  .user-inactive-button {
+    padding: 5px;
+  }
 }

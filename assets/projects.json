@@ -1,5 +1,14 @@
 [
   {
+    "todos": [
+      {
+        "id": "todo-0",
+        "name": "Default Example To Do 0",
+        "description": "Example To Do 0 created through JS",
+        "status": "active",
+        "dueDate": "2023-07-15T00:00:00.000Z"
+      }
+    ],
     "cost": 0,
     "progress": 0,
     "name": "Proyecto de Ejemplo",
@@ -10,11 +19,34 @@
     "id": "dad75adb-6434-4823-b7f4-872c926722f3"
   },
   {
-    "cost": 15000,
-    "progress": 20,
-    "name": "Proyecto Uno",
-    "description": "Proyecto Uno Description",
-    "status": "pending",
+    "todos": [
+      {
+        "id": "todo-1",
+        "name": "Modelación Muralla",
+        "description": "Modelación de la muralla de la presa",
+        "status": "active",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      },
+      {
+        "id": "todo-2",
+        "name": "Modelación Evacuador Crecidas",
+        "description": "Modelación del evacuador de crecidas de la presa",
+        "status": "pending",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      },
+      {
+        "id": "todo-3",
+        "name": "Modelación de camino de acceso",
+        "description": "Modelación del camino de acceso a la presa",
+        "status": "finished",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      }
+    ],
+    "cost": 238000,
+    "progress": 21,
+    "name": "Embalse Las Palmas",
+    "description": "Proyecto de Concesión Embalase Las Palmas",
+    "status": "active",
     "userRole": "engineer",
     "finishDate": "2024-09-18",
     "id": "1d8ec45b-e5c9-4c9a-8648-1601013d6b29"

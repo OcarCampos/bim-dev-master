@@ -57,7 +57,7 @@ export class ProjectsManager {
       if (!(projectsPage && detailsPage)) { return; }
       projectsPage.style.display = "none";
       detailsPage.style.display = "flex";
-      //Updates the details page with the current project's data
+      //Updates the details page with the current project's data and the edit modal for this project
       this.setDetailsPage(project);
       this.setEditModal(project);
     });
@@ -69,6 +69,7 @@ export class ProjectsManager {
   /*
    * Method to set the details page according to project details.
    * Method is private because it is only used internally by the class.
+   * It also sets event listeners for the create todo modal at the details page.
    */
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details");
@@ -128,38 +129,70 @@ export class ProjectsManager {
       cardInitials.textContent = project.initials; 
     }
 
-    //Creating the todos list
+    //Creates the ToDo list at the details page
     const todosList = detailsPage.querySelector("[data-project-info='todos']") as HTMLElement;
     if (todosList) {
       todosList.innerHTML = '';
       project.todos.forEach(todo => {
-        //creates the html for each todo in the dashboard
+        //Creates the html for each todo in the dashboard
         const todoItem = document.createElement('div');
         todoItem.className = 'todo-item';
         todoItem.id = todo.id;
+        todoItem.style.marginTop = '5px';
+        todoItem.style.marginBottom = '5px';
         todoItem.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; column-gap: 15px; align-items: center;">
-              <span class="material-icons-round" style="padding: 10px; background-color: #686868; border-radius: 10px;">construction</span>
+              <span class="material-icons-round" style="padding: 10px; background-color: ${this.setStatusColor(todo.status)}; border-radius: 10px;">construction</span>
               <p>${todo.name}</p>
             </div>
             <p style="text-wrap: nowrap; margin-left: 10px;">${new Date(todo.dueDate).toLocaleDateString()}</p>
           </div>
         `;
-        //Adds an event listener to the todo item html element to display the update todo modal
+        //Adds an event listener to the todo item html element to display the todo modal for edition
         todoItem.addEventListener("click", () => {
-          this.setToDoModal(todo); //modify default modal to display todo info
-          //open modal
           const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
-          if (modal) { modal.showModal(); }
+          if (modal) { 
+            this.setToDoModal(todo); //modify default modal to display todo info
+            modal.showModal();
+            //this.setDetailsPage(project); //update details page with todo info
+          }
+
         });
         todosList.appendChild(todoItem);
       });
     }
+
+    //Event Listeners for showing the create todo modal at details page
+    const createTodoBtn = document.getElementById("create-todo-btn");
+    if (createTodoBtn) {
+      createTodoBtn.addEventListener("click", () => { 
+        const modal = document.getElementById("create-todo-modal") as HTMLDialogElement;
+        if (modal) { modal.showModal(); }
+       });
+    } else {
+      console.warn("Create todo button was not found");
+    }
   }
 
   /*
-   * Method to set the edit modal according to project details.
+   * Method to set the status color of the To Do icon according to the status of the To Do  
+   */
+  private setStatusColor(status: ProjectStatus) {
+    switch (status) {
+      case "active":
+        return "#007bff"; //blue
+      case "pending":
+        return "#ffc107"; //yellow
+      case "finished":
+        return "#28a745"; //green
+      default:
+        return "#6c757d"; //gray
+    }
+  }
+  
+  /*
+   * Method to set the edit modal according to current project details.
    * Method is private because it is only used internally by the class.
    */
   private setEditModal(project: Project) {
@@ -263,7 +296,8 @@ export class ProjectsManager {
       updateTodoDescription.value = todo.description; 
     }
     if (updateTodoDueDate) { 
-      updateTodoDueDate.value = todo.dueDate.toISOString().split('T')[0];
+      const dueDate = todo.dueDate instanceof Date ? todo.dueDate : new Date(todo.dueDate);
+      updateTodoDueDate.value = dueDate.toISOString().split('T')[0];
     }
     if (updateTodoStatus) { 
       // Clear existing options
@@ -280,6 +314,27 @@ export class ProjectsManager {
       });
     }
     
+    //event listener for submit button to update the todo
+    const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormElement;
+    if (updateTodoForm) {
+      updateTodoForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const editedTodoData = new FormData(updateTodoForm);
+        const editedTodo: ITodo = {
+          id: todo.id,
+          name: editedTodoData.get("name") as string,
+          description: editedTodoData.get("description") as string,
+          status: editedTodoData.get("status") as ProjectStatus,
+          dueDate: new Date(editedTodoData.get("dueDate") as string),
+        };
+        Object.assign(todo, editedTodo);
+        const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
+        if (modal) { 
+          modal.close(); 
+        }
+      });
+    }
+
     //event listener for cancel button to close the modal
     const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo") as HTMLButtonElement;
     if (cancelUpdateTodoBtn) {

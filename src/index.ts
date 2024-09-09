@@ -167,15 +167,7 @@ if (cancelEditBtn) {
   });
 }
 
-/*
- * Event Listeners for showing the create todo modal
- */
-const createTodoBtn = document.getElementById("create-todo-btn");
-if (createTodoBtn) {
-  createTodoBtn.addEventListener("click", () => { toggleModal("create-todo-modal", 'open'); });
-} else {
-  console.warn("Create todo button was not found");
-}
+
 
 /*
  * Event Listener for handling the submit of the create todo modal
@@ -202,8 +194,6 @@ if (createTodoForm) {
     }
     */
   });
-} else {
-  console.warn("Create todo button was not found");
 }
 
 /*
@@ -220,16 +210,6 @@ if (cancelCreateTodoBtn) {
   });
 } else {
   console.warn("Cancel create todo button was not found");
-}
-
-/*
- * Event Listeners for showing the update todo modal
- */
-const updateTodoBtn = document.getElementById("update-todo-btn");
-if (updateTodoBtn) {
-  updateTodoBtn.addEventListener("click", () => { toggleModal("update-todo-modal", 'open'); });
-} else {
-  console.warn("Update todo button was not found");
 }
 
 /*

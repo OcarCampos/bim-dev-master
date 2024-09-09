@@ -1,5 +1,5 @@
 //Imports from other js libraries.
-import { IProject, ProjectStatus, UserRole } from "./classes/Project";
+import { IProject, ProjectStatus, UserRole, Statuses, userRoles } from "./classes/Project";
 import { ProjectsManager } from "./classes/ProjectsManager";
 
 /*
@@ -118,7 +118,7 @@ if (importProjectsBtn) {
 }
 
 /*
- * Event Listeners for buttons
+ * Event Listeners for buttons: sidebar and others
  */
 function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
   const button = document.getElementById(buttonId);
@@ -184,7 +184,43 @@ const editProjectForm = document.getElementById("edit-project-form") as HTMLForm
 if (editProjectForm) {
   editProjectForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    // The form submission is handled in the ProjectsManager class
+    //creates a temporary FormData object with the form's data
+    const editData = new FormData(editProjectForm);
+    //creates a temporary IProject object with the form's data
+    const editProjectData: IProject = {
+      name: editData.get("name") as string,
+      description: editData.get("description") as string,
+      status: editData.get("status") as ProjectStatus,
+      userRole: editData.get("userRole") as UserRole,
+      finishDate: new Date(editData.get("finishDate") as string),
+      cost: Number(editData.get("cost")) || 0,
+      progress: Number(editData.get("progress")) || 0
+    };
+    //get's project id from the hidden input field to get original data and compare with new data
+    const originalProjectId = editData.get("projectId") as string;
+    const originalProject = projectsManager.getProject(originalProjectId);
+    if (originalProject) {
+      if (originalProject.name === editProjectData.name &&
+        originalProject.description === editProjectData.description &&
+        originalProject.status === editProjectData.status &&
+        originalProject.userRole === editProjectData.userRole &&
+        (originalProject.finishDate instanceof Date ? originalProject.finishDate.getTime() : new Date(originalProject.finishDate).getTime()) === editProjectData.finishDate.getTime() &&
+        originalProject.cost === editProjectData.cost &&
+        originalProject.progress === editProjectData.progress
+        ) {
+        toggleModal("error-modal", 'open', "There is no information to update in the project.");
+        return;
+      }
+      else {
+        try {
+          //Update project data with new data
+          projectsManager.updateProject(originalProject, editProjectData);
+          toggleModal("edit-project-modal", 'close'); //close modal and go back to details page. No need to reset form, as the data is already updated.
+        } catch (err) {
+          toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
+        }
+      }
+    }
   });
 }
 

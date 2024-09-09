@@ -17,7 +17,7 @@ export class ProjectsManager {
       description: "Example App Project created through JS",
       status: "finished",
       userRole: "architect",
-      finishDate: new Date(),
+      finishDate: new Date("2023-12-31"),
       cost: 0,
       progress: 0
     });
@@ -102,7 +102,14 @@ export class ProjectsManager {
       cardUserRole.textContent = project.userRole; 
     } 
     if (cardFinishDate) { 
-      cardFinishDate.textContent = project.finishDate.toString(); 
+      if (project.finishDate instanceof Date) {
+        cardFinishDate.textContent = project.finishDate.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+      } else if (typeof project.finishDate === 'string') {
+        cardFinishDate.textContent = new Date(project.finishDate).toISOString().split('T')[0];
+      } else {
+        console.error('Invalid finishDate format');
+        cardFinishDate.textContent = 'Invalid Date';
+      }
     } 
     if (cardProgress) { 
       cardProgress.textContent = project.progress.toString() + '%';
@@ -119,6 +126,7 @@ export class ProjectsManager {
    */
   private setEditModal(project: Project) {
      //Variables to change in edit modal
+     const editProjectId = document.getElementById("edit-projectId") as HTMLInputElement;
      const editName = document.getElementById("edit-name") as HTMLInputElement;
      const editDescription = document.getElementById("edit-description") as HTMLTextAreaElement;
      const editStatus = document.getElementById("edit-status") as HTMLSelectElement;
@@ -128,6 +136,9 @@ export class ProjectsManager {
      const editProgress = document.getElementById("edit-progress") as HTMLInputElement;
 
      // Renaming edit modal html
+    if (editProjectId) { 
+      editProjectId.value = project.id; 
+    }
     if (editName) { 
       editName.value = project.name; 
     }
@@ -135,39 +146,31 @@ export class ProjectsManager {
       editDescription.value = project.description; 
     }
     if (editStatus) { 
-      // Clear current options and replace with project information
-      editStatus.innerHTML = "";
-      const defaultOption = document.createElement("option");
-      defaultOption.value = project.status;
-      defaultOption.textContent = project.status;
-      defaultOption.selected = true;
-      editStatus.appendChild(defaultOption);
-      // Create and add other options
+      // Clear existing options
+      editStatus.innerHTML = '';
+      // Fill select with options from Statuses enum
       Object.values(Statuses).forEach((status) => {
-        if (status !== project.status) {
-          const option = document.createElement("option");
-          option.value = status;
-          option.textContent = status;
-          editStatus.appendChild(option);
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        if (status === project.status) {
+          option.setAttribute('selected', 'selected');
         }
+        editStatus.appendChild(option);
       });
     }
     if (editUserRole) { 
-      // Clear current options and replace with project information
-      editUserRole.innerHTML = "";
-      const defaultOption = document.createElement("option");
-      defaultOption.value = project.userRole;
-      defaultOption.textContent = project.userRole;
-      defaultOption.selected = true;
-      editUserRole.appendChild(defaultOption);
-      // Create and add other options
+      // Clear existing options
+      editUserRole.innerHTML = '';
+      // Fill select with options from UserRole enum
       Object.values(userRoles).forEach((role) => {
-        if (role !== project.userRole) {
-          const option = document.createElement("option");
-          option.value = role;
-          option.textContent = role;
-          editUserRole.appendChild(option);
+        const option = document.createElement("option");
+        option.value = role;
+        option.textContent = role;
+        if (role === project.userRole) {
+          option.setAttribute('selected', 'selected');
         }
+        editUserRole.appendChild(option);
       });
     }
     if (editFinishDate) { 
@@ -182,35 +185,30 @@ export class ProjectsManager {
     }
   }
 
-  // Method to handle the edit form submission
-  private handleEditFormSubmit(e: Event, project: Project) {
-    console.log("Inside handleEditFormSubmit");
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-  
-    const updatedData: IProject = {
-      name: formData.get("name") as string,
-      description: formData.get("description") as string,
-      status: formData.get("status") as ProjectStatus,
-      userRole: formData.get("userRole") as UserRole,
-      finishDate: new Date(formData.get("finishDate") as string),
-      cost: Number(formData.get("cost")),
-      progress: Number(formData.get("progress"))
-    };
-  
-    console.log("Updated data:", updatedData);
-    this.updateProject(project, updatedData);
-    console.log("Project updated");
-  }
-  
-  // Method to update the project at the details page
+  /*
+   * Method to update the project information
+   */
   updateProject(project: Project, updatedData: IProject) {
-    Object.assign(project, updatedData);
-    this.setDetailsPage(project);
+    Object.assign(project, updatedData);    // Updates the project with the new data
+    project.setUI();                        // Updates the project card UI
+    this.updateProjectCard(project);       // Updates the project card in the UI
+    this.setDetailsPage(project);          // Updates the details page
+    this.setEditModal(project);            // Updates the edit modal
   }
 
-  // Method to get a project by id
+  /*
+   * Method to update the project card in the UI
+   */
+  private updateProjectCard(project: Project) {
+    const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
+    if (existingCard) {
+      existingCard.replaceWith(project.ui);
+    }
+  }
+
+  /*
+   * Method to get a project by id
+   */
   getProject(id: string) {
     // Find a project in the list with a matching id
     const project = this.list.find((project) => {
@@ -220,7 +218,9 @@ export class ProjectsManager {
     return project;
   }
   
-  // Method to delete a project by id
+  /*
+   * Method to delete a project by id
+   */
   deleteProject(id: string) {
     const project = this.getProject(id); // Get the project with the given id
     if (!project) { return; } // If the project doesn't exist, exit the function
@@ -233,7 +233,9 @@ export class ProjectsManager {
     this.list = remaining;
   }
 
-  // Method to calculate the total cost of all projects
+  /*
+   * Method to calculate the total cost of all projects
+   */
   calculateTotalCost() {
     // Array method to calculate the total cost of all projects
     return this.list.reduce((total, project) => {
@@ -241,7 +243,9 @@ export class ProjectsManager {
     }, 0);
   }
 
-  // Method to get a project by name
+  /*
+   * Method to get a project by name
+   */
   getProjectByName(name: string) {
     // Array method to find a project with a matching name
     return this.list.find((project) => {
@@ -249,7 +253,9 @@ export class ProjectsManager {
     });
   }
   
-  // Method to export projects to JSON
+  /*
+   * Method to export projects to JSON
+   */
   exportToJSON(fileName: string = "projects.json") {
     // Create a new array with projects, excluding the 'ui' property for JSON exporting
     const projectsToExport = this.list.map(project => {
@@ -267,7 +273,9 @@ export class ProjectsManager {
     URL.revokeObjectURL(url);  // revoke the URL to free up memory
   }
   
-  // Method to import projects from JSON
+  /*
+   * Method to import projects from JSON
+   */
   importFromJSON() {
     const input = document.createElement('input'); //create an input element
     input.type = 'file';  //set the type attribute to file

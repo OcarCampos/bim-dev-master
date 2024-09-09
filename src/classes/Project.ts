@@ -63,9 +63,11 @@ export class Project implements IProject {
 
   // Method that creates the project card UI to display in the projects list
   setUI() {
-    if (this.ui) { return; } //If the UI element already exists, return
-    this.ui = document.createElement("div");
+    if (!this.ui) {
+      this.ui = document.createElement("div");
+    }
     this.ui.className = "project-card";
+    this.ui.setAttribute('data-project-id', this.id);
     this.ui.innerHTML = `
       <div class="card-header">
         <p style="background-color: ${this.getRandomColor()}; padding: 10px; border-radius: 8px; aspect-ratio: 1; text-transform: uppercase;">${this.initials}</p>

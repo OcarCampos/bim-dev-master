@@ -1,5 +1,5 @@
 //Imports from other js libraries.
-import { IProject, ProjectStatus, UserRole, Statuses, userRoles } from "./classes/Project";
+import { IProject, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from "./classes/Project";
 import { ProjectsManager } from "./classes/ProjectsManager";
 
 /*
@@ -167,8 +167,6 @@ if (cancelEditBtn) {
   });
 }
 
-
-
 /*
  * Event Listener for handling the submit of the create todo modal
  */
@@ -273,6 +271,36 @@ btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
 btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
 
 
+//event listener for submit button to update the todo
+const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormElement;
+if (updateTodoForm) {
+  updateTodoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const editedTodoData = new FormData(updateTodoForm);
+    const editedTodo: ITodo = {
+      id: todo.id,
+      name: editedTodoData.get("name") as string,
+      description: editedTodoData.get("description") as string,
+      status: editedTodoData.get("status") as ProjectStatus,
+      dueDate: new Date(editedTodoData.get("dueDate") as string),
+    };
+    /*
+    Object.assign(todo, editedTodo);
+    const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
+    if (modal) { 
+      modal.close(); 
+    }
+    */
+  });
+}
 
+//event listener for cancel button to close the modal
+const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo") as HTMLButtonElement;
+if (cancelUpdateTodoBtn) {
+  cancelUpdateTodoBtn.addEventListener("click", () => {
+    const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
+    if (modal) { modal.close(); }
+  });
+}
 
 

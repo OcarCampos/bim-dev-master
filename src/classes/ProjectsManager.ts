@@ -149,15 +149,13 @@ export class ProjectsManager {
             <p style="text-wrap: nowrap; margin-left: 10px;">${new Date(todo.dueDate).toLocaleDateString()}</p>
           </div>
         `;
-        //Adds an event listener to the todo item html element to display the todo modal for edition
+        //Adds an event listener to the todo item html element to display the todo modal for edition/update
         todoItem.addEventListener("click", () => {
           const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
           if (modal) { 
             this.setToDoModal(todo); //modify default modal to display todo info
             modal.showModal();
-            //this.setDetailsPage(project); //update details page with todo info
           }
-
         });
         todosList.appendChild(todoItem);
       });
@@ -311,36 +309,6 @@ export class ProjectsManager {
           option.setAttribute('selected', 'selected');
         }
         updateTodoStatus.appendChild(option);
-      });
-    }
-    
-    //event listener for submit button to update the todo
-    const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormElement;
-    if (updateTodoForm) {
-      updateTodoForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const editedTodoData = new FormData(updateTodoForm);
-        const editedTodo: ITodo = {
-          id: todo.id,
-          name: editedTodoData.get("name") as string,
-          description: editedTodoData.get("description") as string,
-          status: editedTodoData.get("status") as ProjectStatus,
-          dueDate: new Date(editedTodoData.get("dueDate") as string),
-        };
-        Object.assign(todo, editedTodo);
-        const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
-        if (modal) { 
-          modal.close(); 
-        }
-      });
-    }
-
-    //event listener for cancel button to close the modal
-    const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo") as HTMLButtonElement;
-    if (cancelUpdateTodoBtn) {
-      cancelUpdateTodoBtn.addEventListener("click", () => {
-        const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
-        if (modal) { modal.close(); }
       });
     }
   }

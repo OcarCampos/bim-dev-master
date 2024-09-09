@@ -52,6 +52,37 @@ if (finishDateInput) {
 }
 
 /*
+ * Event Listeners handling the submit of the new project modal
+ */
+const projectForm = document.getElementById("new-project-form");
+if (projectForm && projectForm instanceof HTMLFormElement) { 
+  projectForm.addEventListener("submit", (e) => {  //event listener for when the form is submitted
+    e.preventDefault(); //Prevents the default behavior of the form (page reload)
+    const formData = new FormData(projectForm); //Creates a new FormData object with the form's data
+    const projectData: IProject = {
+      name: formData.get("name") as string, //Gets the project name from the form
+      description: formData.get("description") as string, //Gets the project description from the form
+      status: formData.get("status") as ProjectStatus, //Gets the project status from the form
+      userRole: formData.get("userRole") as UserRole, //Gets the project user role from the form
+      finishDate: new Date(formData.get("finishDate") as string), //Gets the project finish date from the form
+      cost: Number(formData.get("cost")) || 0, // Add cost
+      progress: Number(formData.get("progress")) || 0, // Add progress
+      todos: []
+    };
+    try {
+      const project = projectsManager.newProject(projectData); //Creates a new project with the form's data using the projects manager class
+      //console.log(project) //Logs the new project to the console
+      projectForm.reset(); //Resets the form
+      toggleModal("new-project-modal", 'close'); //close the modal on success
+    } catch (err) {
+      toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
+    }
+  });
+} else {
+  console.warn("The project form was not found. Check the ID!");
+}
+
+/*
  * Event Listeners for canceling the new project modal
  */
 const cancelNewProjectBtn = document.getElementById("cancel-new-project-btn");
@@ -78,6 +109,54 @@ if (editProjectBtn) {
 }
 
 /*
+ * Event Listeners for handling the submit of the edit project modal
+ */
+const editProjectForm = document.getElementById("edit-project-form") as HTMLFormElement;
+if (editProjectForm) {
+  editProjectForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    //creates a temporary FormData object with the form's data
+    const editData = new FormData(editProjectForm);
+    //creates a temporary IProject object with the form's data
+    const editProjectData: IProject = {
+      name: editData.get("name") as string,
+      description: editData.get("description") as string,
+      status: editData.get("status") as ProjectStatus,
+      userRole: editData.get("userRole") as UserRole,
+      finishDate: new Date(editData.get("finishDate") as string),
+      cost: Number(editData.get("cost")) || 0,
+      progress: Number(editData.get("progress")) || 0,
+      todos: []
+    };
+    //get's project id from the hidden input field to get original data and compare with new data
+    const originalProjectId = editData.get("projectId") as string;
+    const originalProject = projectsManager.getProject(originalProjectId);
+    if (originalProject) {
+      if (originalProject.name === editProjectData.name &&
+        originalProject.description === editProjectData.description &&
+        originalProject.status === editProjectData.status &&
+        originalProject.userRole === editProjectData.userRole &&
+        (originalProject.finishDate instanceof Date ? originalProject.finishDate.getTime() : new Date(originalProject.finishDate).getTime()) === editProjectData.finishDate.getTime() &&
+        originalProject.cost === editProjectData.cost &&
+        originalProject.progress === editProjectData.progress
+        ) {
+        toggleModal("error-modal", 'open', "There is no information to update in the project.");
+        return;
+      }
+      else {
+        try {
+          //Update project data with new data
+          projectsManager.updateProject(originalProject, editProjectData);
+          toggleModal("edit-project-modal", 'close'); //close modal and go back to details page. No need to reset form, as the data is already updated.
+        } catch (err) {
+          toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
+        }
+      }
+    }
+  });
+}
+
+/*
  * Event Listeners for canceling the edit project modal
  */
 const cancelEditBtn = document.getElementById("cancel-edit");
@@ -86,6 +165,71 @@ if (cancelEditBtn) {
     const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
     if (modal) modal.close();
   });
+}
+
+/*
+ * Event Listeners for showing the create todo modal
+ */
+const createTodoBtn = document.getElementById("create-todo-btn");
+if (createTodoBtn) {
+  createTodoBtn.addEventListener("click", () => { toggleModal("create-todo-modal", 'open'); });
+} else {
+  console.warn("Create todo button was not found");
+}
+
+/*
+ * Event Listener for handling the submit of the create todo modal
+ */
+const createTodoForm = document.getElementById("create-todo-form");
+if (createTodoForm) {
+  createTodoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    /*
+    const formData = new FormData(createTodoForm);
+    const todoData: Omit<ITodo, 'id'> = {
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      status: formData.get("status") as "pending" | "in_progress" | "completed",
+      dueDate: new Date(formData.get("dueDate") as string),
+    };
+    const projectId = formData.get("projectId") as string;
+    try {
+      projectsManager.addTodo(projectId, todoData);
+      toggleModal("create-todo-modal", 'close');
+      createTodoForm.reset();
+    } catch (err) {
+      toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
+    }
+    */
+  });
+} else {
+  console.warn("Create todo button was not found");
+}
+
+/*
+ * Event Listeners for canceling the submit of the create todo modal
+ */
+const cancelCreateTodoBtn = document.getElementById("cancel-create-todo");
+if (cancelCreateTodoBtn) {
+  cancelCreateTodoBtn.addEventListener("click", () => {
+    toggleModal("create-todo-modal", 'close');
+    const todoForm = document.getElementById("create-todo-form") as HTMLFormElement;
+    if (todoForm) {
+      todoForm.reset();
+    }
+  });
+} else {
+  console.warn("Cancel create todo button was not found");
+}
+
+/*
+ * Event Listeners for showing the update todo modal
+ */
+const updateTodoBtn = document.getElementById("update-todo-btn");
+if (updateTodoBtn) {
+  updateTodoBtn.addEventListener("click", () => { toggleModal("update-todo-modal", 'open'); });
+} else {
+  console.warn("Update todo button was not found");
 }
 
 /*
@@ -101,7 +245,7 @@ if (closeErrorModalBtn) {
 }
 
 /*
- * Event Listeners for export and import projects
+ * Event Listeners for export projects
  */
 const exportProjectsBtn = document.getElementById("export-projects-btn");
 if (exportProjectsBtn) {
@@ -110,6 +254,9 @@ if (exportProjectsBtn) {
   });
 }
 
+/*
+ * Event Listeners for import projects
+ */
 const importProjectsBtn = document.getElementById("import-projects-btn");
 if (importProjectsBtn) {
   importProjectsBtn.addEventListener("click", () => {
@@ -144,83 +291,8 @@ function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
 // Buttons
 btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
 btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
-btnClick("details-btn", "project-details", ["projects-page", "project-users"]);
 
 
-/*
- * Event Listeners handling the submit of the new project modal
- */
-const projectForm = document.getElementById("new-project-form");
-if (projectForm && projectForm instanceof HTMLFormElement) { 
-  projectForm.addEventListener("submit", (e) => {  //event listener for when the form is submitted
-    e.preventDefault(); //Prevents the default behavior of the form (page reload)
-    const formData = new FormData(projectForm); //Creates a new FormData object with the form's data
-    const projectData: IProject = {
-      name: formData.get("name") as string, //Gets the project name from the form
-      description: formData.get("description") as string, //Gets the project description from the form
-      status: formData.get("status") as ProjectStatus, //Gets the project status from the form
-      userRole: formData.get("userRole") as UserRole, //Gets the project user role from the form
-      finishDate: new Date(formData.get("finishDate") as string), //Gets the project finish date from the form
-      cost: Number(formData.get("cost")) || 0, // Add cost
-      progress: Number(formData.get("progress")) || 0 // Add progress
-    };
-    try {
-      const project = projectsManager.newProject(projectData); //Creates a new project with the form's data using the projects manager class
-      //console.log(project) //Logs the new project to the console
-      projectForm.reset(); //Resets the form
-      toggleModal("new-project-modal", 'close'); //close the modal on success
-    } catch (err) {
-      toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
-    }
-  });
-} else {
-  console.warn("The project form was not found. Check the ID!");
-}
 
-/*
- * Event Listeners for handling the submit of the edit project modal
- */
-const editProjectForm = document.getElementById("edit-project-form") as HTMLFormElement;
-if (editProjectForm) {
-  editProjectForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    //creates a temporary FormData object with the form's data
-    const editData = new FormData(editProjectForm);
-    //creates a temporary IProject object with the form's data
-    const editProjectData: IProject = {
-      name: editData.get("name") as string,
-      description: editData.get("description") as string,
-      status: editData.get("status") as ProjectStatus,
-      userRole: editData.get("userRole") as UserRole,
-      finishDate: new Date(editData.get("finishDate") as string),
-      cost: Number(editData.get("cost")) || 0,
-      progress: Number(editData.get("progress")) || 0
-    };
-    //get's project id from the hidden input field to get original data and compare with new data
-    const originalProjectId = editData.get("projectId") as string;
-    const originalProject = projectsManager.getProject(originalProjectId);
-    if (originalProject) {
-      if (originalProject.name === editProjectData.name &&
-        originalProject.description === editProjectData.description &&
-        originalProject.status === editProjectData.status &&
-        originalProject.userRole === editProjectData.userRole &&
-        (originalProject.finishDate instanceof Date ? originalProject.finishDate.getTime() : new Date(originalProject.finishDate).getTime()) === editProjectData.finishDate.getTime() &&
-        originalProject.cost === editProjectData.cost &&
-        originalProject.progress === editProjectData.progress
-        ) {
-        toggleModal("error-modal", 'open', "There is no information to update in the project.");
-        return;
-      }
-      else {
-        try {
-          //Update project data with new data
-          projectsManager.updateProject(originalProject, editProjectData);
-          toggleModal("edit-project-modal", 'close'); //close modal and go back to details page. No need to reset form, as the data is already updated.
-        } catch (err) {
-          toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
-        }
-      }
-    }
-  });
-}
+
 

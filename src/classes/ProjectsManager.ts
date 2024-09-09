@@ -1,4 +1,4 @@
-import { IProject, Project, ProjectStatus, UserRole, Statuses, userRoles } from "./Project"; // Importing project class and interface
+import { IProject, Project, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from "./Project"; // Importing project class and interface
 
 /*
  * Class for managing projects
@@ -19,7 +19,16 @@ export class ProjectsManager {
       userRole: "architect",
       finishDate: new Date("2023-12-31"),
       cost: 0,
-      progress: 0
+      progress: 0,
+      todos: [
+        {
+          id: "todo-0",
+          name: "Default Example To Do 0",
+          description: "Example To Do 0 created through JS",
+          status: "active",
+          dueDate: new Date("2023-07-15")
+        }
+      ]
     });
   }
 
@@ -118,6 +127,35 @@ export class ProjectsManager {
     if (cardInitials) { 
       cardInitials.textContent = project.initials; 
     }
+
+    //Creating the todos list
+    const todosList = detailsPage.querySelector("[data-project-info='todos']") as HTMLElement;
+    if (todosList) {
+      todosList.innerHTML = '';
+      project.todos.forEach(todo => {
+        //creates the html for each todo in the dashboard
+        const todoItem = document.createElement('div');
+        todoItem.className = 'todo-item';
+        todoItem.id = todo.id;
+        todoItem.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; column-gap: 15px; align-items: center;">
+              <span class="material-icons-round" style="padding: 10px; background-color: #686868; border-radius: 10px;">construction</span>
+              <p>${todo.name}</p>
+            </div>
+            <p style="text-wrap: nowrap; margin-left: 10px;">${new Date(todo.dueDate).toLocaleDateString()}</p>
+          </div>
+        `;
+        //Adds an event listener to the todo item html element to display the update todo modal
+        todoItem.addEventListener("click", () => {
+          this.setToDoModal(todo); //modify default modal to display todo info
+          //open modal
+          const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
+          if (modal) { modal.showModal(); }
+        });
+        todosList.appendChild(todoItem);
+      });
+    }
   }
 
   /*
@@ -125,7 +163,7 @@ export class ProjectsManager {
    * Method is private because it is only used internally by the class.
    */
   private setEditModal(project: Project) {
-     //Variables to change in edit modal
+     //Variables to change in edit modal for project
      const editProjectId = document.getElementById("edit-projectId") as HTMLInputElement;
      const editName = document.getElementById("edit-name") as HTMLInputElement;
      const editDescription = document.getElementById("edit-description") as HTMLTextAreaElement;
@@ -203,6 +241,52 @@ export class ProjectsManager {
     const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
     if (existingCard) {
       existingCard.replaceWith(project.ui);
+    }
+  }
+
+  /*
+   * Method to set the update todo modal according to todo details.
+   * Method is private because it is only used internally by the class.
+   */
+  private setToDoModal(todo: ITodo) {
+    //variables to change in update-todo-modal for todos
+    const updateTodoName = document.getElementById("update-todo-name") as HTMLInputElement;
+    const updateTodoDescription = document.getElementById("update-todo-description") as HTMLTextAreaElement;
+    const updateTodoDueDate = document.getElementById("update-todo-dueDate") as HTMLInputElement;
+    const updateTodoStatus = document.getElementById("update-todo-status") as HTMLSelectElement;
+
+    //Renaming update-todo-modal html
+    if (updateTodoName) { 
+      updateTodoName.value = todo.name; 
+    }
+    if (updateTodoDescription) { 
+      updateTodoDescription.value = todo.description; 
+    }
+    if (updateTodoDueDate) { 
+      updateTodoDueDate.value = todo.dueDate.toISOString().split('T')[0];
+    }
+    if (updateTodoStatus) { 
+      // Clear existing options
+      updateTodoStatus.innerHTML = '';
+      // Fill select with options from Statuses enum
+      Object.values(Statuses).forEach((status) => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        if (status === todo.status) {
+          option.setAttribute('selected', 'selected');
+        }
+        updateTodoStatus.appendChild(option);
+      });
+    }
+    
+    //event listener for cancel button to close the modal
+    const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo") as HTMLButtonElement;
+    if (cancelUpdateTodoBtn) {
+      cancelUpdateTodoBtn.addEventListener("click", () => {
+        const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
+        if (modal) { modal.close(); }
+      });
     }
   }
 

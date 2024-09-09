@@ -25,6 +25,18 @@ export interface IProject {
   finishDate: Date;
   cost: number;
   progress: number;
+  todos: ITodo[];
+}
+
+/*
+ * Interface for todo data. Describes the structure of the todo object
+ */
+export interface ITodo {
+  id: string;
+  name: string;
+  description: string;
+  status: ProjectStatus;
+  dueDate: Date;
 }
 
 /*
@@ -37,6 +49,7 @@ export class Project implements IProject {
   status: Statuses;
   userRole: userRoles;
   finishDate: Date;
+  todos: ITodo[] = [];
   
   // Class internals
   ui: HTMLDivElement; //UI element for the project card
@@ -61,7 +74,9 @@ export class Project implements IProject {
     return '#' + Math.floor(Math.random()*16777215).toString(16);
   }
 
-  // Method that creates the project card UI to display in the projects list
+  /*
+   * Method that creates the project card UI to display in the projects list
+   */
   setUI() {
     if (!this.ui) {
       this.ui = document.createElement("div");
@@ -95,4 +110,5 @@ export class Project implements IProject {
         </div>
       </div>`;
   }
+
 }

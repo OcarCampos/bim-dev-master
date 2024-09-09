@@ -126,9 +126,9 @@
                                 <div class="form-field-container">
                                     <label for="edit-status">Status</label>
                                     <select id="edit-status" name="status">
-                                        <option value="xxxxx">xxxxx</option>
-                                        <option value="yyyyy">yyyyy</option>
-                                        <option value="zzzzz">zzzzz</option>
+                                        <option value="pending">pending</option>
+                                        <option value="active">active</option>
+                                        <option value="finished">finished</option>
                                     </select>
                                 </div>
                                 <!-- Role input-->
@@ -168,6 +168,10 @@
                     <form>
                         <h2>Create To-Do</h2>
                         <div class="input-list">
+                            <!-- Hidden input to store the project ID-->
+                            <div class="form-field-container">
+                                <input id="create-todo-projectId" name="projectId" type="hidden">
+                            </div>
                             <!-- To-Do name input-->
                             <div class="form-field-container">
                                 <label><span class="material-icons-round">construction</span>To-Do Name</label>
@@ -187,15 +191,15 @@
                             <div class="form-field-container">
                                 <label><span class="material-icons-round">not_listed_location</span>Status</label>
                                 <select>
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="completed">Completed</option>
+                                    <option value="pending">pending</option>
+                                    <option value="active">active</option>
+                                    <option value="finished">finished</option>
                                 </select>
                             </div>
-                        </form>div>
-                        <div class="form-button-container">
+                        </form>
+                        <div style="display: flex; justify-content: flex-end; padding: 20px; column-gap: 10px;">
                             <button type="button" id="cancel-create-todo">Cancel</button>
-                            <button type="submit">Create To-Do</button>
+                            <button type="submit">Create</button>
                         </div>
                     </form>
                 </dialog>
@@ -206,30 +210,30 @@
                         <div class="input-list">
                             <!-- To-Do name input-->
                             <div class="form-field-container">
-                                <label><span class="material-icons-round">construction</span>To-Do Name</label>
-                                <input type="text" placeholder="Awesome Example To-Do">
+                                <label for="update-todo-name"><span class="material-icons-round">construction</span>To-Do Name</label>
+                                <input id="update-todo-name" type="text" placeholder="Awesome Example To-Do" required>
                             </div>
                             <!-- To-Do description input-->
                             <div class="form-field-container">
-                                <label><span class="material-icons-round">subject</span>Description</label>
-                                <textarea placeholder="Describe your to-do here"></textarea>
+                                <label for="update-todo-description"><span class="material-icons-round">subject</span>Description</label>
+                                <textarea id="update-todo-description" placeholder="Describe your to-do here" required></textarea>
                             </div>
                             <!-- To-Do due date input-->
                             <div class="form-field-container">
-                                <label><span class="material-icons-round">calendar_month</span>Due Date</label>
-                                <input type="date">
+                                <label for="update-todo-dueDate"><span class="material-icons-round">calendar_month</span>Due Date</label>
+                                <input id="update-todo-dueDate" type="date" required>
                             </div>
                             <!-- To-Do status input-->
                             <div class="form-field-container">
-                                <label><span class="material-icons-round">not_listed_location</span>Status</label>
-                                <select>
+                                <label for="update-todo-status"><span class="material-icons-round">not_listed_location</span>Status</label>
+                                <select id="update-todo-status" required>
                                     <option value="pending">Pending</option>
                                     <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-button-container">
+                        <div style="display: flex; justify-content: flex-end; padding: 20px; column-gap: 10px;">
                             <button type="button" id="cancel-update-todo">Cancel</button>
                             <button type="submit">Update To-Do</button>
                         </div>
@@ -245,75 +249,75 @@
                 </header>
                 <!-- Main content of the project details page-->
                 <div class="main-page-content">
-                <!-- Dashboard of the project details page-->
-                <div style="display: flex; flex-direction: column; row-gap: 30px;">
-                    <!-- Project dashboard card-->
-                    <div class="dashboard-card" style="padding: 30px 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0px 30px; margin-bottom: 30px;">
-                            <p data-project-info="cardInitials" style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
-                            <button id="edit-project-btn" class="btn-secondary"><p style="width: 100%;">Edit</p></button>
-                        </div>
-                        <div style="padding: 0 30px;">
-                            <div>
-                                <h5 data-project-info="cardName">Example Project</h5>
-                                <p data-project-info="cardDescription">Example Project stored in HTML</p>
+                    <!-- Dashboard of the project details page-->
+                    <div style="display: flex; flex-direction: column; row-gap: 30px;">
+                        <!-- Project dashboard card-->
+                        <div class="dashboard-card" style="padding: 30px 0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0px 30px; margin-bottom: 30px;">
+                                <p data-project-info="cardInitials" style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
+                                <button id="edit-project-btn" class="btn-secondary"><p style="width: 100%;">Edit</p></button>
                             </div>
-                            <div style="display: flex; column-gap: 30px; padding: 30px 0px; justify-content: space-between;">
+                            <div style="padding: 0 30px;">
                                 <div>
-                                    <p style="color: #969696; font-size: var(--font-sm)">Status</p>
-                                    <p data-project-info="cardStatus">Active</p>
+                                    <h5 data-project-info="cardName">Example Project</h5>
+                                    <p data-project-info="cardDescription">Example Project stored in HTML</p>
                                 </div>
-                                <div>
-                                    <p style="color: #969696; font-size: var(--font-sm)">Cost</p>
-                                    <p data-project-info="cardCost">$ 2'542.000</p>
-                                </div>
-                                <div>
-                                    <p style="color: #969696; font-size: var(--font-sm)">Role</p>
-                                    <p data-project-info="cardUserRole">Engineer</p>
-                                </div>
-                                <div>
-                                    <p style="color: #969696; font-size: var(--font-sm)">Finish Date</p>
-                                    <p data-project-info="cardFinishDate">2023-05-01</p>
-                                </div>
-                            </div>
-                            <div style="background-color: #404040; border-radius: 9999px; overflow: auto;">
-                                <div data-project-info="cardProgress" style="width: 80%; background-color: green; padding: 4px 0; text-align: center;">80%</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- To-Do dashboard card-->
-                    <div class="dashboard-card" style="flex-grow: 1;">
-                        <!-- To-Do header-->
-                        <div style="padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
-                            <h4>To-Do</h4>
-                            <div style="display: flex; align-items: center; justify-content: end; column-gap: 20px;">
-                                <div style="display: flex; align-items: center; column-gap: 10px;">
-                                    <span class="material-icons-round">search</span>
-                                    <input type="text" placeholder="Search To-Do's by name" style="width: 100%;">
-                                </div>
-                                <span class="material-icons-round">add</span>
-                            </div>
-                        </div>
-                        <!-- To-Do list-->
-                        <div style="display: flex; flex-direction: column; padding: 10px 30px; row-gap: 20px;">
-                            <!-- To-Do item example. This list should be filled with JS-->
-                            <div class="todo-item">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div style="display: flex; column-gap: 15px; align-items: center;">
-                                        <span class="material-icons-round" style="padding: 10px; background-color: #686868; border-radius: 10px;">construction</span>
-                                        <p>Make anything here as you want, even something longer.</p>
+                                <div style="display: flex; column-gap: 30px; padding: 30px 0px; justify-content: space-between;">
+                                    <div>
+                                        <p style="color: #969696; font-size: var(--font-sm)">Status</p>
+                                        <p data-project-info="cardStatus">Active</p>
                                     </div>
-                                    <p style="text-wrap: nowrap; margin-left: 10px;">Fri, 20 sep</p>
+                                    <div>
+                                        <p style="color: #969696; font-size: var(--font-sm)">Cost</p>
+                                        <p data-project-info="cardCost">$ 2'542.000</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: #969696; font-size: var(--font-sm)">Role</p>
+                                        <p data-project-info="cardUserRole">Engineer</p>
+                                    </div>
+                                    <div>
+                                        <p style="color: #969696; font-size: var(--font-sm)">Finish Date</p>
+                                        <p data-project-info="cardFinishDate">2023-05-01</p>
+                                    </div>
+                                </div>
+                                <div style="background-color: #404040; border-radius: 9999px; overflow: auto;">
+                                    <div data-project-info="cardProgress" style="width: 80%; background-color: green; padding: 4px 0; text-align: center;">80%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- To-Do dashboard card-->
+                        <div class="todos-card" style="flex-grow: 1;">
+                            <!-- To-Do header-->
+                            <div style="padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
+                                <!-- To-Do title-->
+                                <h4>To-Do</h4>
+                                <!-- To-Do actions-->
+                                <div style="display: flex; align-items: center; justify-content: end; column-gap: 20px;">
+                                    <!-- To-Do search bar-->
+                                    <div style="display: flex; align-items: center; column-gap: 10px;">
+                                        <span class="material-icons-round">search</span>
+                                        <input type="text" placeholder="Search To-Do's by name" style="width: 100%;">
+                                    </div>
+                                    <!-- To-Do create button-->
+                                    <span class="material-icons-round action-icon" id="create-todo-btn" style="cursor: pointer;">add</span>
+                                </div>
+                            </div>
+                            <!-- To-Do list-->
+                            <div style="display: flex; flex-direction: column; padding: 10px 30px; row-gap: 20px;">
+                                <!-- actual list of todos-->
+                                <div data-project-info="todos" class="todos-list">
+                                    <!-- This list should be filled with JS-->
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Viewer container-->
-                <div id="viewer-container" class="dashboard-card"></div>
+                    <!-- Viewer container-->
+                    <div id="viewer-container" class="dashboard-card">
+                        <!-- Viewer content will be inserted here in M3-->
+                    </div>
                 </div>
             </div>
-             <!-- Div to show User's page -->
+             <!-- User's list page -->
             <div class="page" id="project-users" style="display: none;">
                 <!-- This is the modal for a new project-->
                 <dialog id="add-user-modal">

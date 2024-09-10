@@ -12,7 +12,7 @@ export class ProjectsManager {
    */
   constructor(container: HTMLElement) {
     this.ui = container;  //Creating the container for the project cards
-    this.newProject({    //Creating a default project card with default values
+    const project = this.newProject({    //Creating a default project card with default values. Should be this.newProject()
       name: "Example Project",
       description: "Example App Project created through JS",
       status: "finished",
@@ -30,6 +30,7 @@ export class ProjectsManager {
         }
       ]
     });
+    project.ui.click(); //added just for testing
   }
 
   /*

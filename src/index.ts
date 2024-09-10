@@ -1,6 +1,7 @@
 //Imports from other js libraries.
 import { IProject, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from "./classes/Project";
 import { ProjectsManager } from "./classes/ProjectsManager";
+import { v4 as uuidv4 } from 'uuid'; // Importing uuid library to create unique ids for each project
 
 /*
  * Function to toggle the visibility of a modal
@@ -25,6 +26,15 @@ function toggleModal(id: string, action: 'open' | 'close', errorMessage?: string
 }
 
 /*
+ * Function to set the default date for the finish date input in the new project modal
+ */
+function defaultDate() {
+  const defaultDate = new Date();
+  defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now
+  return defaultDate;
+}
+
+/*
  * Gets the projects list container from index.html and creates 
  * a new projects manager element to handle the projects list
  */
@@ -36,19 +46,16 @@ const projectsManager = new ProjectsManager(projectsListUI);
  */
 const newProjectBtn = document.getElementById("new-project-btn");
 if (newProjectBtn) {
-  newProjectBtn.addEventListener("click", () => { toggleModal("new-project-modal", 'open'); });
+  newProjectBtn.addEventListener("click", () => {
+    //Setting a default date for the finish date input
+    const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
+    if (finishDateInput) {
+      finishDateInput.valueAsDate = defaultDate();
+    }
+    toggleModal("new-project-modal", 'open'); 
+  });
 } else {
   console.warn("New projects button was not found");
-}
-
-/*
- * Set default date for finish date input in new project modal
- */
-const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
-if (finishDateInput) {
-  const defaultDate = new Date();
-  defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now
-  finishDateInput.valueAsDate = defaultDate;
 }
 
 /*
@@ -96,16 +103,6 @@ if (cancelNewProjectBtn) {
   });
 } else {
   console.warn("The cancel new project button was not found. Check the ID!");
-}
-
-/*
- * Event Listeners for showing the edit project modal
- */
-const editProjectBtn = document.getElementById("edit-project-btn");
-if (editProjectBtn) {
-  editProjectBtn.addEventListener("click", () => { toggleModal("edit-project-modal", 'open'); });
-} else {
-  console.warn("Edit project button was not found");
 }
 
 /*
@@ -170,27 +167,28 @@ if (cancelEditBtn) {
 /*
  * Event Listener for handling the submit of the create todo modal
  */
-const createTodoForm = document.getElementById("create-todo-form");
+const createTodoForm = document.getElementById("create-todo-form") as HTMLFormElement;
 if (createTodoForm) {
   createTodoForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    /*
     const formData = new FormData(createTodoForm);
-    const todoData: Omit<ITodo, 'id'> = {
+    //get all the todos from this project
+    const todoData: ITodo = {
+      id: uuidv4(),
       name: formData.get("name") as string,
       description: formData.get("description") as string,
-      status: formData.get("status") as "pending" | "in_progress" | "completed",
+      status: formData.get("status") as Statuses,
       dueDate: new Date(formData.get("dueDate") as string),
     };
     const projectId = formData.get("projectId") as string;
     try {
+      console.log(todoData); //for debugging purposes only
       projectsManager.addTodo(projectId, todoData);
       toggleModal("create-todo-modal", 'close');
       createTodoForm.reset();
     } catch (err) {
       toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
     }
-    */
   });
 }
 
@@ -208,6 +206,43 @@ if (cancelCreateTodoBtn) {
   });
 } else {
   console.warn("Cancel create todo button was not found");
+}
+
+
+/*
+ * Event Listener for handling the submit of the update todo modal
+ */
+const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormElement;
+if (updateTodoForm) {
+  updateTodoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(updateTodoForm);
+    const updateTodoData: ITodo = {
+      id: formData.get("todoId") as string,
+      name: formData.get("name") as string,
+      description: formData.get("description") as string,
+      status: formData.get("status") as Statuses,
+      dueDate: new Date(formData.get("dueDate") as string),
+    };
+    const projectId = formData.get("projectId") as string;
+    const todoId = formData.get("todoId") as string;
+    try {
+      projectsManager.updateTodo(projectId, todoId, updateTodoData);
+      toggleModal("update-todo-modal", 'close');
+    } catch (err) {
+      toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
+    }
+  });
+}
+
+/*
+ * Event Listener for canceling the update todo modal
+ */
+const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo");
+if (cancelUpdateTodoBtn) {
+  cancelUpdateTodoBtn.addEventListener("click", () => {
+    toggleModal("update-todo-modal", 'close');
+  });
 }
 
 /*
@@ -269,38 +304,5 @@ function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
 // Buttons
 btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
 btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
-
-
-//event listener for submit button to update the todo
-const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormElement;
-if (updateTodoForm) {
-  updateTodoForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const editedTodoData = new FormData(updateTodoForm);
-    const editedTodo: ITodo = {
-      id: todo.id,
-      name: editedTodoData.get("name") as string,
-      description: editedTodoData.get("description") as string,
-      status: editedTodoData.get("status") as ProjectStatus,
-      dueDate: new Date(editedTodoData.get("dueDate") as string),
-    };
-    /*
-    Object.assign(todo, editedTodo);
-    const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
-    if (modal) { 
-      modal.close(); 
-    }
-    */
-  });
-}
-
-//event listener for cancel button to close the modal
-const cancelUpdateTodoBtn = document.getElementById("cancel-update-todo") as HTMLButtonElement;
-if (cancelUpdateTodoBtn) {
-  cancelUpdateTodoBtn.addEventListener("click", () => {
-    const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
-    if (modal) { modal.close(); }
-  });
-}
 
 

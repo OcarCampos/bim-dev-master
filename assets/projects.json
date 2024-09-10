@@ -11,12 +11,47 @@
     ],
     "cost": 0,
     "progress": 0,
-    "name": "Proyecto de Ejemplo",
-    "description": "Proyecto de Ejemplo creado a través de JS",
-    "status": "pending",
+    "initials": "EP",
+    "name": "Example Project",
+    "description": "Example App Project created through JS",
+    "status": "finished",
     "userRole": "architect",
-    "finishDate": "2024-09-04",
-    "id": "dad75adb-6434-4823-b7f4-872c926722f3"
+    "finishDate": "2023-12-31T00:00:00.000Z",
+    "id": "a5f3dcf4-dd2b-46e1-99e6-91fb99fcc0f2"
+  },
+  {
+    "todos": [
+      {
+        "id": "805092d8-d012-4efb-b10b-825c3b808fdf",
+        "name": "Recepción As-Built",
+        "description": "Recepción Modelos As-Built",
+        "status": "finished",
+        "dueDate": "2023-11-01T00:00:00.000Z"
+      },
+      {
+        "id": "805092d8-d093-4efb-b10b-825c3b808f1f",
+        "name": "Revisión Antecedentes As-built",
+        "description": "Revisión de los antecedentes para puesta en marcha",
+        "status": "finished",
+        "dueDate": "2024-11-15T00:00:00.000Z"
+      },
+      {
+        "id": "f6b26b51-00c9-491b-bc68-99e459883bc8",
+        "name": "Inicio Puesta en Marcha",
+        "description": "Puesta en marcha de proyecto",
+        "status": "finished",
+        "dueDate": "2024-12-30T00:00:00.000Z"
+      }
+    ],
+    "cost": 152000,
+    "progress": 100,
+    "initials": "EP",
+    "name": "Concesión Marítima",
+    "description": "Ejemplo Proyecto Concesión Marítima",
+    "status": "finished",
+    "userRole": "engineer",
+    "finishDate": "2023-12-31T00:00:00.000Z",
+    "id": "e9c73781-290f-42c1-bfd7-257615f6881f"
   },
   {
     "todos": [
@@ -44,21 +79,12 @@
     ],
     "cost": 238000,
     "progress": 21,
+    "initials": "EL",
     "name": "Embalse Las Palmas",
-    "description": "Proyecto de Concesión Embalase Las Palmas",
+    "description": "Proyecto de Concesión Embalse Las Palmas",
     "status": "active",
     "userRole": "engineer",
-    "finishDate": "2024-09-18",
-    "id": "1d8ec45b-e5c9-4c9a-8648-1601013d6b29"
-  },
-  {
-    "cost": 25000,
-    "progress": 95,
-    "name": "Proyecto Dos",
-    "description": "Proyecto Dos description.",
-    "status": "finished",
-    "userRole": "manager",
-    "finishDate": "2024-09-03",
-    "id": "3d80793a-0802-4b26-8954-9bfc2aa7a4dd"
+    "finishDate": "2027-07-01T00:00:00.000Z",
+    "id": "75b4ca4b-d89a-42ed-9ab9-0998888d5c93"
   }
 ]

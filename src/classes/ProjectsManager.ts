@@ -59,7 +59,6 @@ export class ProjectsManager {
       detailsPage.style.display = "flex";
       //Updates the details page with the current project's data and the edit modal for this project
       this.setDetailsPage(project);
-      this.setEditModal(project);
     });
     this.ui.append(project.ui); //Adds the project card to the UI
     this.list.push(project); //Adds the project to the list
@@ -129,6 +128,20 @@ export class ProjectsManager {
       cardInitials.textContent = project.initials; 
     }
 
+    //Event Listeners for showing the edit project modal
+    const editProjectBtn = document.getElementById("edit-project-btn");
+    if (editProjectBtn) {
+      editProjectBtn.addEventListener("click", () => { 
+        const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
+        if (modal) { 
+          this.setEditModal(project); //Sets the edit modal with the current project details
+          modal.showModal();
+        }
+      });
+    } else {
+      console.warn("Edit project button was not found");
+    }
+
     //Creates the ToDo list at the details page
     const todosList = detailsPage.querySelector("[data-project-info='todos']") as HTMLElement;
     if (todosList) {
@@ -153,20 +166,35 @@ export class ProjectsManager {
         todoItem.addEventListener("click", () => {
           const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
           if (modal) { 
-            this.setToDoModal(todo); //modify default modal to display todo info
+            this.setToDoModal(todo, project.id); //modify default modal to display todo info
             modal.showModal();
           }
         });
         todosList.appendChild(todoItem);
       });
     }
-
+  
+    //defining project ID for create todo modal
+    const createTodoProjectId = document.getElementById("create-todo-projectId") as HTMLInputElement;
+    if (createTodoProjectId) {
+      createTodoProjectId.value = project.id;
+    }
+    
     //Event Listeners for showing the create todo modal at details page
     const createTodoBtn = document.getElementById("create-todo-btn");
     if (createTodoBtn) {
       createTodoBtn.addEventListener("click", () => { 
         const modal = document.getElementById("create-todo-modal") as HTMLDialogElement;
-        if (modal) { modal.showModal(); }
+        if (modal) {
+          //Setting a default date for the due date input
+          const createTodoDueDate = document.getElementById('create-todo-dueDate') as HTMLInputElement;
+          if (createTodoDueDate) {
+            const defaultDate = new Date();
+            defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now 
+            createTodoDueDate.valueAsDate = defaultDate;
+          }
+          modal.showModal(); 
+        }
        });
     } else {
       console.warn("Create todo button was not found");
@@ -255,38 +283,25 @@ export class ProjectsManager {
   }
 
   /*
-   * Method to update the project information
-   */
-  updateProject(project: Project, updatedData: IProject) {
-    Object.assign(project, updatedData);    // Updates the project with the new data
-    project.setUI();                        // Updates the project card UI
-    this.updateProjectCard(project);       // Updates the project card in the UI
-    this.setDetailsPage(project);          // Updates the details page
-    this.setEditModal(project);            // Updates the edit modal
-  }
-
-  /*
-   * Method to update the project card in the UI
-   */
-  private updateProjectCard(project: Project) {
-    const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
-    if (existingCard) {
-      existingCard.replaceWith(project.ui);
-    }
-  }
-
-  /*
    * Method to set the update todo modal according to todo details.
    * Method is private because it is only used internally by the class.
    */
-  private setToDoModal(todo: ITodo) {
+  private setToDoModal(todo: ITodo, projectId: string) {
     //variables to change in update-todo-modal for todos
+    const updateTodoProjectId = document.getElementById("update-todo-projectId") as HTMLInputElement;
+    const updateTodoId = document.getElementById("update-todo-id") as HTMLInputElement;
     const updateTodoName = document.getElementById("update-todo-name") as HTMLInputElement;
     const updateTodoDescription = document.getElementById("update-todo-description") as HTMLTextAreaElement;
     const updateTodoDueDate = document.getElementById("update-todo-dueDate") as HTMLInputElement;
     const updateTodoStatus = document.getElementById("update-todo-status") as HTMLSelectElement;
 
     //Renaming update-todo-modal html
+    if (updateTodoProjectId) { 
+      updateTodoProjectId.value = projectId; 
+    }
+    if (updateTodoId) { 
+      updateTodoId.value = todo.id; 
+    }
     if (updateTodoName) { 
       updateTodoName.value = todo.name; 
     }
@@ -310,6 +325,65 @@ export class ProjectsManager {
         }
         updateTodoStatus.appendChild(option);
       });
+    }
+  }
+
+  /*
+   * Method to add a todo to a project
+   */
+  addTodo(projectId: string, todo: ITodo) {
+    const project = this.getProject(projectId);
+    if (project) {
+      project.todos.push(todo);
+      this.setDetailsPage(project);          // Updates the details page
+    }
+  }
+
+  /*
+   * Method to update a todo in a project
+   */
+  updateTodo(projectId: string, todoId: string, updatedTodo: ITodo) {
+    const project = this.getProject(projectId);
+    if (project) {
+      const todo = project.todos.find(t => t.id === todoId);
+      if (todo) {
+        Object.assign(todo, updatedTodo);
+        this.setDetailsPage(project);
+      }
+    }
+  }
+
+  /*
+   * Method to get all the todos of a project
+   */
+  getTodos(projectId: string) {
+    const project = this.getProject(projectId);
+    if (project) {
+      return project.todos;
+    }
+    return [];
+  } 
+
+  /*
+   * Method to update the project information
+   */
+  updateProject(project: Project, updatedData: IProject) {
+    const todos = this.getTodos(project.id); //get all the todos of the project
+    Object.assign(project, updatedData);    // Updates the project with the new data
+    project.todos = todos;                  // Updates the todos of the project
+    project.setUI();                        // Updates the project card UI
+    this.updateProjectCard(project);       // Updates the project card in the UI
+    this.setDetailsPage(project);          // Updates the details page
+    this.setEditModal(project);            // Updates the edit modal
+  }
+
+  /*
+   * Method to update the project card in the UI
+   */
+  private updateProjectCard(project: Project) {
+    const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
+    if (existingCard) {
+      existingCard.replaceWith(project.ui);
     }
   }
 
@@ -395,7 +469,14 @@ export class ProjectsManager {
       const projects: IProject[] = JSON.parse(json as string);  //parse the JSON data according to the IProject interface
       for (const project of projects) {  //for each project in the JSON data
         try {
-          this.newProject(project);  //create a new project with the data from the JSON
+          //search for current project name in the current list of projects
+          const existantProject = this.getProjectByName(project.name);
+          //update existing project with the data from the JSON  or create a new one.
+          if (existantProject) {
+            this.updateProject(existantProject, project);
+          } else {
+            this.newProject(project);  
+          }
         } catch (error) {
           console.log("Error creating project from JSON:", error);
         }

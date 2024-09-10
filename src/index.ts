@@ -8,6 +8,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 
 /*
@@ -421,8 +422,9 @@ gridHelper.material.color.set(0x00ff00); // Set the color of the grid helper to 
 
 const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight); // Create a new directional light helper
 scene.add(directionalLightHelper); // Add the directional light helper to the scene
-scene.add(gridHelper); // Add the grid helper to the scene
+//scene.add(gridHelper); // Add the grid helper to the scene
 
+/*
 const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1); // Create a new spot light helper
 scene.add(spotLightHelper1); // Add the spot light helper to the scene
 const spotLightHelper2 = new THREE.SpotLightHelper(spotLight2); // Create a new spot light helper
@@ -431,7 +433,7 @@ const spotLightHelper3 = new THREE.SpotLightHelper(spotLight3); // Create a new 
 scene.add(spotLightHelper3); // Add the spot light helper to the scene
 const spotLightHelper4 = new THREE.SpotLightHelper(spotLight4); // Create a new spot light helper
 scene.add(spotLightHelper4); // Add the spot light helper to the scene
-
+*/
 /*
  * Adding GUI to the scene
  * GUI is used to add controls to the meshes and other
@@ -477,6 +479,7 @@ dirLightControls.addColor(directionalLight, "color"); // Add a GUI control for t
 /*
  * Importing OBJ model that comes with MTL file
 */
+/*
 const objLoader = new OBJLoader();
 const mtlLoader = new MTLLoader();
 
@@ -498,6 +501,18 @@ objLoader.load("assets/Gear/Gear1.obj", (object) => {
   spotLight3.target = object;
   spotLight4.target = object;
   console.log("OBJ model loaded");
+}, undefined, (error) => {
+  console.error(error);
+});
+*/
+
+/*
+ * Importing a gltf model
+*/
+const gltfLoader = new GLTFLoader();
+gltfLoader.load("assets/Explorer/scene.gltf", (object) => {
+  scene.add(object.scene);
+  console.log("GLTF model loaded");
 }, undefined, (error) => {
   console.error(error);
 });

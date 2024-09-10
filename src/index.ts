@@ -3,11 +3,6 @@ import { IProject, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from ".
 import { ProjectsManager } from "./classes/ProjectsManager";
 import { v4 as uuidv4 } from 'uuid';
 
-//Imports for three.js
-import * as THREE from "three"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
-import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
-
 /*
  * Function to toggle the visibility of a modal
  */
@@ -315,21 +310,25 @@ btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
 btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
 
 
+
+
 /*
  * Three.js Setup
 */
+/*
 const scene = new THREE.Scene() // Create a new scene
 //scene.background = new THREE.Color("#000000") // Set the background color of the scene to black
 const viewerContainer = document.getElementById("viewer-container") as HTMLElement // Get the viewer container element
 let camera: THREE.PerspectiveCamera // Define the camera
 let renderer: THREE.WebGLRenderer // Define the renderer
 let cameraControls: OrbitControls // Define the camera controls
-
+*/
 /*
  * Sets up the viewer
  * This function is called when the viewer container is resized or when the viewer is initialized
  * for the first time.
  */
+/*
 function setupViewer() {
   const containerDimensions = viewerContainer.getBoundingClientRect() // Get the dimensions of the container
   const aspectRatio = containerDimensions.width / containerDimensions.height // Calculate the aspect ratio of the container
@@ -351,7 +350,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.4) // Create a new ambie
 scene.add(cube, directionalLight, ambientLight) // Add the cube, directional light, and ambient light to the scene
 
 setupViewer() // Call the setupViewer() function to initialize the viewer for the first time
-
+*/
 /*
  * Renders the scene
  * This function is called repeatedly (recursively) using requestAnimationFrame
@@ -359,11 +358,14 @@ setupViewer() // Call the setupViewer() function to initialize the viewer for th
  * Function doesn't crash the browser, because it's optimized by the browser.
  * Function is called after a first call when the window is resized.
  */
+/*
 function renderScene() {
   renderer.render(scene, camera) // Render the scene using the camera
   requestAnimationFrame(renderScene) // Call renderScene() again on the next animation frame to create a smooth animation effect
 }
+*/
 
+/*
 // we will make the container of the viewer responsive
 window.addEventListener("resize", () => {
   setupViewer()
@@ -410,3 +412,4 @@ dirLightControls.add(directionalLight.rotation, "y").min(-Math.PI).max(Math.PI).
 dirLightControls.add(directionalLight.rotation, "z").min(-Math.PI).max(Math.PI).step(0.01) // Add a GUI control for the directional light's z rotation
 //controls for the directional light's intensity
 dirLightControls.add(directionalLight, "intensity").min(0).max(1).step(0.01) // Add a GUI control for the directional light's intensity
+*/

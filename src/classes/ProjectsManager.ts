@@ -12,7 +12,7 @@ export class ProjectsManager {
    */
   constructor(container: HTMLElement) {
     this.ui = container;  //Creating the container for the project cards
-    this.newProject({    //Creating a default project card
+    this.newProject({    //Creating a default project card with default values
       name: "Example Project",
       description: "Example App Project created through JS",
       status: "finished",
@@ -138,8 +138,6 @@ export class ProjectsManager {
           modal.showModal();
         }
       });
-    } else {
-      console.warn("Edit project button was not found");
     }
 
     //Creates the ToDo list at the details page
@@ -162,6 +160,7 @@ export class ProjectsManager {
             <p style="text-wrap: nowrap; margin-left: 10px;">${new Date(todo.dueDate).toLocaleDateString()}</p>
           </div>
         `;
+
         //Adds an event listener to the todo item html element to display the todo modal for edition/update
         todoItem.addEventListener("click", () => {
           const modal = document.getElementById("update-todo-modal") as HTMLDialogElement;
@@ -174,7 +173,7 @@ export class ProjectsManager {
       });
     }
   
-    //defining project ID for create todo modal
+    //defining project ID for create todo modal in html
     const createTodoProjectId = document.getElementById("create-todo-projectId") as HTMLInputElement;
     if (createTodoProjectId) {
       createTodoProjectId.value = project.id;
@@ -348,7 +347,7 @@ export class ProjectsManager {
       const todo = project.todos.find(t => t.id === todoId);
       if (todo) {
         Object.assign(todo, updatedTodo);
-        this.setDetailsPage(project);
+        this.setDetailsPage(project);      // Updates the details page
       }
     }
   }
@@ -403,8 +402,8 @@ export class ProjectsManager {
    * Method to delete a project by id
    */
   deleteProject(id: string) {
-    const project = this.getProject(id); // Get the project with the given id
-    if (!project) { return; } // If the project doesn't exist, exit the function
+    const project = this.getProject(id); 
+    if (!project) { return; } 
     project.ui.remove(); // Remove the project's UI element from the DOM
     // Filter out the project with the given id from the list
     const remaining = this.list.filter((project) => { 

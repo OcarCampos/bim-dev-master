@@ -1,7 +1,7 @@
 //Imports from other js libraries.
 import { IProject, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from "./classes/Project";
 import { ProjectsManager } from "./classes/ProjectsManager";
-import { v4 as uuidv4 } from 'uuid'; // Importing uuid library to create unique ids for each project
+import { v4 as uuidv4 } from 'uuid';
 
 /*
  * Function to toggle the visibility of a modal
@@ -22,6 +22,30 @@ function toggleModal(id: string, action: 'open' | 'close', errorMessage?: string
     }
   } else {
     console.warn("The provided modal wasn't found. ID: ", id);
+  }
+}
+
+/*
+ * Event Listeners for buttons: sidebar and others
+ */
+function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
+  const button = document.getElementById(buttonId);
+  if (button) {
+    button.addEventListener("click", () => {
+      const showPage = document.getElementById(showPageId);
+      if (showPage) {
+        showPage.style.display = "flex";
+      }
+
+      hidePageId.forEach(hidePageId => {
+        const hidePage = document.getElementById(hidePageId);
+        if (hidePage) {
+          hidePage.style.display = "none";
+        }
+      });
+    });
+  } else {
+    console.warn(`The button ${buttonId} was not found. Check the ID!`);
   }
 }
 
@@ -47,11 +71,12 @@ const projectsManager = new ProjectsManager(projectsListUI);
 const newProjectBtn = document.getElementById("new-project-btn");
 if (newProjectBtn) {
   newProjectBtn.addEventListener("click", () => {
-    //Setting a default date for the finish date input
+    //Setting a default date
     const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
     if (finishDateInput) {
       finishDateInput.valueAsDate = defaultDate();
     }
+    //Opening the modal
     toggleModal("new-project-modal", 'open'); 
   });
 } else {
@@ -63,30 +88,28 @@ if (newProjectBtn) {
  */
 const projectForm = document.getElementById("new-project-form");
 if (projectForm && projectForm instanceof HTMLFormElement) { 
-  projectForm.addEventListener("submit", (e) => {  //event listener for when the form is submitted
-    e.preventDefault(); //Prevents the default behavior of the form (page reload)
-    const formData = new FormData(projectForm); //Creates a new FormData object with the form's data
+  projectForm.addEventListener("submit", (e) => {  
+    e.preventDefault(); 
+    const formData = new FormData(projectForm);
+    //Object with the project data from the form
     const projectData: IProject = {
-      name: formData.get("name") as string, //Gets the project name from the form
-      description: formData.get("description") as string, //Gets the project description from the form
-      status: formData.get("status") as ProjectStatus, //Gets the project status from the form
-      userRole: formData.get("userRole") as UserRole, //Gets the project user role from the form
-      finishDate: new Date(formData.get("finishDate") as string), //Gets the project finish date from the form
-      cost: Number(formData.get("cost")) || 0, // Add cost
-      progress: Number(formData.get("progress")) || 0, // Add progress
+      name: formData.get("name") as string, 
+      description: formData.get("description") as string, 
+      status: formData.get("status") as ProjectStatus, 
+      userRole: formData.get("userRole") as UserRole,
+      finishDate: new Date(formData.get("finishDate") as string),
+      cost: Number(formData.get("cost")) || 0, 
+      progress: Number(formData.get("progress")) || 0, 
       todos: []
     };
     try {
-      const project = projectsManager.newProject(projectData); //Creates a new project with the form's data using the projects manager class
-      //console.log(project) //Logs the new project to the console
-      projectForm.reset(); //Resets the form
-      toggleModal("new-project-modal", 'close'); //close the modal on success
+      projectsManager.newProject(projectData); //Creates a new project.
+      projectForm.reset();
+      toggleModal("new-project-modal", 'close');
     } catch (err) {
       toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
     }
   });
-} else {
-  console.warn("The project form was not found. Check the ID!");
 }
 
 /*
@@ -144,7 +167,7 @@ if (editProjectForm) {
         try {
           //Update project data with new data
           projectsManager.updateProject(originalProject, editProjectData);
-          toggleModal("edit-project-modal", 'close'); //close modal and go back to details page. No need to reset form, as the data is already updated.
+          toggleModal("edit-project-modal", 'close'); //close modal. No need to reset form.
         } catch (err) {
           toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
         }
@@ -160,7 +183,7 @@ const cancelEditBtn = document.getElementById("cancel-edit");
 if (cancelEditBtn) {
   cancelEditBtn.addEventListener("click", () => {
     const modal = document.getElementById("edit-project-modal") as HTMLDialogElement;
-    if (modal) modal.close();
+    if (modal) modal.close(); //no need to reset form.
   });
 }
 
@@ -171,8 +194,8 @@ const createTodoForm = document.getElementById("create-todo-form") as HTMLFormEl
 if (createTodoForm) {
   createTodoForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    //Get data from form and create object with the data.
     const formData = new FormData(createTodoForm);
-    //get all the todos from this project
     const todoData: ITodo = {
       id: uuidv4(),
       name: formData.get("name") as string,
@@ -180,9 +203,9 @@ if (createTodoForm) {
       status: formData.get("status") as Statuses,
       dueDate: new Date(formData.get("dueDate") as string),
     };
+    //Get project id from the hidden input field.
     const projectId = formData.get("projectId") as string;
     try {
-      console.log(todoData); //for debugging purposes only
       projectsManager.addTodo(projectId, todoData);
       toggleModal("create-todo-modal", 'close');
       createTodoForm.reset();
@@ -216,6 +239,7 @@ const updateTodoForm = document.getElementById("update-todo-form") as HTMLFormEl
 if (updateTodoForm) {
   updateTodoForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    //Get data from form and create object with the data.
     const formData = new FormData(updateTodoForm);
     const updateTodoData: ITodo = {
       id: formData.get("todoId") as string,
@@ -224,9 +248,11 @@ if (updateTodoForm) {
       status: formData.get("status") as Statuses,
       dueDate: new Date(formData.get("dueDate") as string),
     };
+    //Get project id and todo id from the hidden input fields.
     const projectId = formData.get("projectId") as string;
     const todoId = formData.get("todoId") as string;
     try {
+      //Update the todo with the new data.
       projectsManager.updateTodo(projectId, todoId, updateTodoData);
       toggleModal("update-todo-modal", 'close');
     } catch (err) {
@@ -278,31 +304,8 @@ if (importProjectsBtn) {
 }
 
 /*
- * Event Listeners for buttons: sidebar and others
+ * Sidebar buttons
  */
-function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
-  const button = document.getElementById(buttonId);
-  if (button) {
-    button.addEventListener("click", () => {
-      const showPage = document.getElementById(showPageId);
-      if (showPage) {
-        showPage.style.display = "flex";
-      }
-
-      hidePageId.forEach(hidePageId => {
-        const hidePage = document.getElementById(hidePageId);
-        if (hidePage) {
-          hidePage.style.display = "none";
-        }
-      });
-    });
-  } else {
-    console.warn(`The button ${buttonId} was not found. Check the ID!`);
-  }
-}
-
-// Buttons
 btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
 btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
-
 

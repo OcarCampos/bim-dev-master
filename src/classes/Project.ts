@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'; // Importing uuid library to create unique 
 export type ProjectStatus = "pending" | "active" | "finished";
 export type UserRole = "architect" | "engineer" | "manager";
 
+//For dropdown selectors
 export enum Statuses {
   pending = "pending",
   active = "active",

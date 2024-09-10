@@ -1,0 +1,90 @@
+[
+  {
+    "todos": [
+      {
+        "id": "todo-0",
+        "name": "Default Example To Do 0",
+        "description": "Example To Do 0 created through JS",
+        "status": "active",
+        "dueDate": "2023-07-15T00:00:00.000Z"
+      }
+    ],
+    "cost": 0,
+    "progress": 0,
+    "initials": "EP",
+    "name": "Example Project",
+    "description": "Example App Project created through JS",
+    "status": "finished",
+    "userRole": "architect",
+    "finishDate": "2023-12-31T00:00:00.000Z",
+    "id": "a5f3dcf4-dd2b-46e1-99e6-91fb99fcc0f2"
+  },
+  {
+    "todos": [
+      {
+        "id": "805092d8-d012-4efb-b10b-825c3b808fdf",
+        "name": "Recepción As-Built",
+        "description": "Recepción Modelos As-Built",
+        "status": "finished",
+        "dueDate": "2023-11-01T00:00:00.000Z"
+      },
+      {
+        "id": "805092d8-d093-4efb-b10b-825c3b808f1f",
+        "name": "Revisión Antecedentes As-built",
+        "description": "Revisión de los antecedentes para puesta en marcha",
+        "status": "finished",
+        "dueDate": "2024-11-15T00:00:00.000Z"
+      },
+      {
+        "id": "f6b26b51-00c9-491b-bc68-99e459883bc8",
+        "name": "Inicio Puesta en Marcha",
+        "description": "Puesta en marcha de proyecto",
+        "status": "finished",
+        "dueDate": "2024-12-30T00:00:00.000Z"
+      }
+    ],
+    "cost": 152000,
+    "progress": 100,
+    "initials": "EP",
+    "name": "Concesión Marítima",
+    "description": "Ejemplo Proyecto Concesión Marítima",
+    "status": "finished",
+    "userRole": "engineer",
+    "finishDate": "2023-12-31T00:00:00.000Z",
+    "id": "e9c73781-290f-42c1-bfd7-257615f6881f"
+  },
+  {
+    "todos": [
+      {
+        "id": "todo-1",
+        "name": "Modelación Muralla",
+        "description": "Modelación de la muralla de la presa",
+        "status": "active",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      },
+      {
+        "id": "todo-2",
+        "name": "Modelación Evacuador Crecidas",
+        "description": "Modelación del evacuador de crecidas de la presa",
+        "status": "pending",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      },
+      {
+        "id": "todo-3",
+        "name": "Modelación de camino de acceso",
+        "description": "Modelación del camino de acceso a la presa",
+        "status": "finished",
+        "dueDate": "2023-09-20T00:00:00.000Z"
+      }
+    ],
+    "cost": 238000,
+    "progress": 21,
+    "initials": "EL",
+    "name": "Embalse Las Palmas",
+    "description": "Proyecto de Concesión Embalse Las Palmas",
+    "status": "active",
+    "userRole": "engineer",
+    "finishDate": "2027-07-01T00:00:00.000Z",
+    "id": "75b4ca4b-d89a-42ed-9ab9-0998888d5c93"
+  }
+]

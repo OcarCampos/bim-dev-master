@@ -5,13 +5,11 @@ import { IProject, Project, ProjectStatus, UserRole, Statuses, userRoles, ITodo 
  */
 export class ProjectsManager {
   list: Project[] = []; //list of projects
-  ui: HTMLElement; //UI element for the project cards
 
   /*
    * Constructor for project cards
    */
-  constructor(container: HTMLElement) {
-    this.ui = container;  //Creating the container for the project cards
+  constructor() {
     const project = this.newProject({    //Creating a default project card with default values. Should be this.newProject()
       name: "Example Project",
       description: "Example App Project created through JS",
@@ -30,7 +28,7 @@ export class ProjectsManager {
         }
       ]
     });
-    project.ui.click(); //added just for testing
+    project.ui.click();
   }
 
   /*
@@ -61,7 +59,6 @@ export class ProjectsManager {
       //Updates the details page with the current project's data and the edit modal for this project
       this.setDetailsPage(project);
     });
-    this.ui.append(project.ui); //Adds the project card to the UI
     this.list.push(project); //Adds the project to the list
     return project; //Returns the project
   }
@@ -381,10 +378,10 @@ export class ProjectsManager {
    * Method to update the project card in the UI
    */
   private updateProjectCard(project: Project) {
-    const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
-    if (existingCard) {
-      existingCard.replaceWith(project.ui);
-    }
+    //const existingCard = this.ui.querySelector(`[data-project-id="${project.id}"]`) as HTMLElement;
+    //if (existingCard) {
+    //  existingCard.replaceWith(project.ui);
+    //}
   }
 
   /*

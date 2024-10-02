@@ -1,6 +1,10 @@
+//Imports from React
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import { Sidebar } from "./react-components/Sidebar";
+import { ProjectsPage } from "./react-components/ProjectsPage";
+
 //Imports from other js libraries.
-import { IProject, ProjectStatus, UserRole, Statuses, userRoles, ITodo } from "./classes/Project";
-import { ProjectsManager } from "./classes/ProjectsManager";
 import { v4 as uuidv4 } from 'uuid';
 //Three JS Imports
 import * as THREE from "three";
@@ -9,6 +13,17 @@ import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js"
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+
+//Render the sidebar component into the sidebar div
+const rootElement = document.getElementById("app") as HTMLDivElement;
+const appRoot = ReactDOM.createRoot(rootElement);
+appRoot.render(
+  //the following empty div is to fool react to render the components into the same hierachy as the html elements.
+  <> 
+    <Sidebar />
+    <ProjectsPage />
+  </>
+);
 
 
 /*
@@ -64,72 +79,6 @@ function defaultDate() {
   const defaultDate = new Date();
   defaultDate.setMonth(defaultDate.getMonth() + 1); // Set default to one month from now
   return defaultDate;
-}
-
-/*
- * Gets the projects list container from index.html and creates 
- * a new projects manager element to handle the projects list
- */
-const projectsListUI = document.getElementById("projects-list") as HTMLElement;
-const projectsManager = new ProjectsManager(projectsListUI);
-
-/*
- * Event Listeners for showing the new project modal
- */
-const newProjectBtn = document.getElementById("new-project-btn");
-if (newProjectBtn) {
-  newProjectBtn.addEventListener("click", () => {
-    //Setting a default date
-    const finishDateInput = document.getElementById('finishDateInput') as HTMLInputElement;
-    if (finishDateInput) {
-      finishDateInput.valueAsDate = defaultDate();
-    }
-    //Opening the modal
-    toggleModal("new-project-modal", 'open'); 
-  });
-}
-
-/*
- * Event Listeners handling the submit of the new project modal
- */
-const projectForm = document.getElementById("new-project-form");
-if (projectForm && projectForm instanceof HTMLFormElement) { 
-  projectForm.addEventListener("submit", (e) => {  
-    e.preventDefault(); 
-    const formData = new FormData(projectForm);
-    //Object with the project data from the form
-    const projectData: IProject = {
-      name: formData.get("name") as string, 
-      description: formData.get("description") as string, 
-      status: formData.get("status") as ProjectStatus, 
-      userRole: formData.get("userRole") as UserRole,
-      finishDate: new Date(formData.get("finishDate") as string),
-      cost: Number(formData.get("cost")) || 0, 
-      progress: Number(formData.get("progress")) || 0, 
-      todos: []
-    };
-    try {
-      projectsManager.newProject(projectData); //Creates a new project.
-      projectForm.reset();
-      toggleModal("new-project-modal", 'close');
-    } catch (err) {
-      toggleModal("error-modal", 'open', err instanceof Error ? err.message : String(err));
-    }
-  });
-}
-
-/*
- * Event Listeners for canceling the new project modal
- */
-const cancelNewProjectBtn = document.getElementById("cancel-new-project-btn");
-if (cancelNewProjectBtn) {
-  cancelNewProjectBtn.addEventListener("click", () => { 
-    toggleModal("new-project-modal", 'close');
-    const projectForm = document.getElementById("new-project-form") as HTMLFormElement;
-    if (projectForm) {
-      projectForm.reset(); //resets the form
-    }
-  });
 }
 
 /*
@@ -282,26 +231,6 @@ if (closeErrorModalBtn) {
     toggleModal("error-modal", 'close');
   });
 } 
-
-/*
- * Event Listeners for export projects
- */
-const exportProjectsBtn = document.getElementById("export-projects-btn");
-if (exportProjectsBtn) {
-  exportProjectsBtn.addEventListener("click", () => {
-    projectsManager.exportToJSON();
-  });
-}
-
-/*
- * Event Listeners for import projects
- */
-const importProjectsBtn = document.getElementById("import-projects-btn");
-if (importProjectsBtn) {
-  importProjectsBtn.addEventListener("click", () => {
-    projectsManager.importFromJSON();
-  });
-}
 
 /*
  * Sidebar buttons

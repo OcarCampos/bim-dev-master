@@ -10,6 +10,9 @@
     </head>
     <!-- Body of the page-->    
     <body>
+        <!-- React app container-->
+        <div id="app"></div>
+
         <!-- Error modal for different error cases across the site-->
         <dialog id="error-modal" class="modal">
             <div class="modal-content" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
@@ -18,89 +21,9 @@
                 <button id="close-error-modal" class="ok-button">OK</button>
             </div>
         </dialog>
-        <!-- Sidebar of the page-->
-        <aside id="sidebar">
-            <!-- Company logo-->
-            <img id="company-logo" src="./assets/company-logo.svg" alt="Construction Company">
-            <!-- Sidebar buttons-->
-            <ul id="nav-buttons">
-                <li id="projects-btn"><span class="material-icons-round">apartment</span>Project List</li>
-                <li id="users-btn"><span class="material-icons-round">people</span>Users List</li>
-            </ul>
-        </aside>
+        
         <!-- Main content of the page-->
         <main id="content">
-            <!-- Projects page-->
-            <div class="page" id="projects-page" style="display: flex;">
-                <!-- New project modal-->
-                <dialog id="new-project-modal">
-                    <!-- New project form-->
-                    <form id="new-project-form">
-                        <!-- Title of the form-->
-                        <h2>Add a new project</h2>
-                        <!-- Input list-->
-                        <div class="input-list">
-                        <!-- Name input-->
-                        <div class="form-field-container">
-                            <label><span class="material-icons-round">apartment</span>Project Name</label>
-                            <input name="name" type="text" placeholder="Awesome Example Project">
-                            <p style="color: gray; font-size: var(--font-sm); margin-top: 5px; font-style: italic;">Name must be short and unique</p>
-                        </div>
-                        <!-- Description input-->
-                        <div class="form-field-container">
-                            <label><span class="material-icons-round">subject</span>Description</label>
-                            <textarea name="description" cols="30" rows="5" placeholder="Describe your project here"></textarea>
-                        </div>
-                        <!-- Role input-->
-                        <div class="form-field-container">
-                            <label><span class="material-icons-round">person</span>Role</label>
-                            <select name="userRole">
-                            <option>Architect</option>
-                            <option>Engineer</option>
-                            <option>Manager</option>
-                            </select>
-                        </div>
-                        <!-- Status input-->
-                        <div class="form-field-container">
-                            <label><span class="material-icons-round">not_listed_location</span>Status</label>
-                            <select name="status">
-                            <option>Pending</option>
-                            <option>Active</option>
-                            <option>Finished</option>
-                            </select>
-                        </div>
-                        <!-- Finish date input-->
-                        <div class="form-field-container">
-                            <label for="finishDate">
-                            <span class="material-icons-round">calendar_month</span>
-                            Finish Date
-                            </label>
-                            <input name="finishDate" type="date" id="finishDateInput"></input>
-                        </div>
-                        <!-- Buttons-->
-                        <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
-                            <button type="button" id="cancel-new-project-btn" style="background-color: transparent;">Cancel</button>
-                            <button type="submit" style="background-color: rgb(18, 145, 18);">Accept</button>
-                        </div>
-                        </div>
-                    </form>
-                </dialog>
-                <!-- Header of the projects page-->
-                <header>
-                    <!-- Title of the page-->
-                    <h2>Projects List</h2>
-                    <!-- Actions of the page-->
-                    <div style="display: flex; align-items: center; column-gap: 15px;">
-                        <span id="import-projects-btn" class="material-icons-round action-icon">file_upload</span>
-                        <span id="export-projects-btn" class="material-icons-round action-icon">file_download</span>
-                        <button id="new-project-btn"><span class="material-icons-round">add</span>New Project</button>
-                    </div>
-                </header>
-                <!-- Projects list-->
-                <div id="projects-list">
-                    <!-- Projects are filled in dynamically here using JS-->
-                </div>
-            </div>
             <!-- Project details page-->
             <div class="page" id="project-details" style="display: none;">
                 <!-- Edit project modal-->
@@ -425,6 +348,6 @@
             </div>
         </main>
         <!-- Script to run the project-->
-        <script type="module" src="./src/index.ts"></script> <!-- Rename to main.ts when using typescript -->
+        <script type="module" src="./src/index.tsx"></script> <!-- Rename to main.ts when using typescript -->
     </body>
 </html>

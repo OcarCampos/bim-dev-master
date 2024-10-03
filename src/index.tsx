@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { Sidebar } from "./react-components/Sidebar";
 import { ProjectsPage } from "./react-components/ProjectsPage";
+import { ProjectDetailsPage } from "./react-components/ProjectDetailsPage";
 
 //Imports from other js libraries.
 import { v4 as uuidv4 } from 'uuid';
@@ -22,6 +23,7 @@ appRoot.render(
   <> 
     <Sidebar />
     <ProjectsPage />
+    <ProjectDetailsPage />
   </>
 );
 

@@ -16,6 +16,11 @@ export function ProjectsPage() {
     //Call the onProjectDeleted function when a project is deleted
     projectsManager.onProjectDeleted = () => {setProjects([...projectsManager.list])};
 
+    //Iterating through projects list and creating a project card for each one
+    const projectCards = projects.map((project) => {
+        return <ProjectCard key={project.id} project={project} />
+    });
+    
     //Hook to update the list of projects when it changes
     React.useEffect(() => {
         console.log("Projects state changed;", projects);
@@ -156,7 +161,7 @@ export function ProjectsPage() {
                 {/* Projects list */}
                 <div id="projects-list">
                     {/* Projects are filled in dynamically here using React */}
-                    <ProjectCard />
+                    { projectCards }
                 </div>
         </div>
     );

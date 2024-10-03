@@ -14,7 +14,7 @@ export class ProjectsManager {
    * Constructor for project cards
    */
   constructor() {
-    this.newProject({    //Creating a default project card with default values. Should be this.newProject()
+    this.newProject({    //Should be this.newProject()
       name: "Example Project",
       description: "Example App Project created through JS",
       status: "finished",

@@ -1,6 +1,14 @@
 import * as React from 'react';
+import { Project } from '../classes/Project';
 
-export function ProjectCard() {
+//Prop interface with the data we will pass to the component
+interface Props {
+    project: Project;
+}
+
+//Component to render a project card
+//It receives the prop interface with the project to display data.
+export function ProjectCard(props: Props) {
     return (
         <div className="project-card">
             <div className="card-header">
@@ -13,14 +21,14 @@ export function ProjectCard() {
                     textTransform: "uppercase"
                 }}
                 >
-                HC
+                { props.project.initials }
                 </p>
                 <div>
                 <h5>
-                    Project Name
+                    { props.project.name }
                 </h5>
                 <p>
-                    Project Description
+                    { props.project.description }
                 </p>
                 </div>
             </div>
@@ -28,25 +36,25 @@ export function ProjectCard() {
                 <div className="card-property">
                 <p style={{ color: "#969696" }}>Status</p>
                 <p>
-                    Project Status
+                    { props.project.status }
                 </p>
                 </div>
                 <div className="card-property">
                 <p style={{ color: "#969696" }}>Role</p>
                 <p>
-                    Project User Role
+                    { props.project.userRole } 
                 </p>
                 </div>
                 <div className="card-property">
                 <p style={{ color: "#969696" }}>Cost</p>
                 <p>
-                    $10000
+                    ${ props.project.cost } 
                 </p>
                 </div>
                 <div className="card-property">
                 <p style={{ color: "#969696" }}>Estimated Progress</p>
                 <p>
-                    100%
+                    { props.project.progress }%
                 </p>
                 </div>
             </div>

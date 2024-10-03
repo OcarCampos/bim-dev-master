@@ -5,10 +5,21 @@ import { ProjectCard } from './ProjectCard';
 
 export function ProjectsPage() {
     //Instance of ProjectsManager to use in the component
-    const projectsManager = new ProjectsManager();
+    //It's a react hook to keep the state of the projects list
+    //think of it as a global variable that doesn't change even if we access many times in the component
+    const [projectsManager] = React.useState(new ProjectsManager());
 
     //Hook to keep UI updated with Projects list
-    React.useState<Project[]>(projectsManager.list);
+    const [projects, setProjects] = React.useState<Project[]>(projectsManager.list);
+    //Call the onProjectCreated function when a new project is created
+    projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])};
+    //Call the onProjectDeleted function when a project is deleted
+    projectsManager.onProjectDeleted = () => {setProjects([...projectsManager.list])};
+
+    //Hook to update the list of projects when it changes
+    React.useEffect(() => {
+        console.log("Projects state changed;", projects);
+    }, [projects]);
     
     //Function to handle the click on the new project button
     const onNewProjectClick = () => {
@@ -39,7 +50,6 @@ export function ProjectsPage() {
             };
             try {
                 const project = projectsManager.newProject(projectData); //Creates a new project.
-                console.log(project);
                 projectForm.reset();
                 const modal = document.getElementById('new-project-modal');
                 if (modal && modal instanceof HTMLDialogElement) {

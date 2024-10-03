@@ -5,12 +5,16 @@ import { IProject, Project, ProjectStatus, UserRole, Statuses, userRoles, ITodo 
  */
 export class ProjectsManager {
   list: Project[] = []; //list of projects
+  //these functions are called any time projects created/deleted/edited.
+  //The code of the function is modified in the React component.
+  onProjectCreated = (project: Project) => {};
+  onProjectDeleted = () => {};
 
   /*
    * Constructor for project cards
    */
   constructor() {
-    const project = this.newProject({    //Creating a default project card with default values. Should be this.newProject()
+    this.newProject({    //Creating a default project card with default values. Should be this.newProject()
       name: "Example Project",
       description: "Example App Project created through JS",
       status: "finished",
@@ -28,7 +32,7 @@ export class ProjectsManager {
         }
       ]
     });
-    this.list.push(project);
+    //this.list.push(project);
   }
 
   /*
@@ -50,6 +54,7 @@ export class ProjectsManager {
     //Creates a new project with the data provided
     const project = new Project(data);
     this.list.push(project); //Adds the project to the list
+    this.onProjectCreated(project); //Calls the onProjectCreated function
     return project; //Returns the project
   }
 
@@ -248,6 +253,7 @@ export class ProjectsManager {
     });
     // Update the list with the remaining projects
     this.list = remaining;
+    this.onProjectDeleted();
   }
 
   /*

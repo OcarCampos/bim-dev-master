@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { ProjectStatus, UserRole, IProject } from '../classes/Project';
+import { ProjectStatus, UserRole, IProject, Project } from '../classes/Project';
 import { ProjectsManager } from '../classes/ProjectsManager';
+import { ProjectCard } from './ProjectCard';
 
 export function ProjectsPage() {
-    //Projects manager
+    //Instance of ProjectsManager to use in the component
     const projectsManager = new ProjectsManager();
+
+    //Hook to keep UI updated with Projects list
+    React.useState<Project[]>(projectsManager.list);
     
     //Function to handle the click on the new project button
     const onNewProjectClick = () => {
@@ -141,7 +145,8 @@ export function ProjectsPage() {
                 </header>
                 {/* Projects list */}
                 <div id="projects-list">
-                    {/* Projects are filled in dynamically here using JS */}
+                    {/* Projects are filled in dynamically here using React */}
+                    <ProjectCard />
                 </div>
         </div>
     );

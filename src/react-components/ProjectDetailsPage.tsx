@@ -1,6 +1,28 @@
 import * as React from 'react';
+import * as Router from 'react-router-dom';
 
-export function ProjectDetailsPage() {
+import { ProjectsManager } from '../classes/ProjectsManager';
+
+interface Props {
+    projectsManager: ProjectsManager
+}
+
+export function ProjectDetailsPage(props: Props) {
+    //Router Parameters to get the id
+    const routeParams = Router.useParams<{id: string}>();
+    console.log('Project ID:', routeParams.id);
+    const id = routeParams.id;
+    if (!id){
+        console.log('Given ID is not present in project list.');
+        return;
+    }
+    //Defining the ID for the project
+    const project = props.projectsManager.getProject(id);
+    if (!project) { 
+        console.log('Project not found in project list.');
+        return;
+    }
+
     return (
         <div>
             {/* Project details page*/}
@@ -259,9 +281,9 @@ export function ProjectDetailsPage() {
                 <header>
                     {/* Title of the page*/}
                     <div>
-                        <h2 data-project-info="name">Example Project</h2>
+                        <h2 data-project-info="name">{project.name}</h2>
                         <p data-project-info="description" style={{ color: "#969696" }}>
-                            Example Project located wherever you want.
+                            {project.description}
                         </p>
                     </div>
                 </header>
@@ -290,7 +312,7 @@ export function ProjectDetailsPage() {
                                     padding: 12
                                 }}
                                 >
-                                    HC
+                                    {project.initials}
                                 </p>
                                 <button id="edit-project-btn" className="btn-secondary">
                                     <p style={{ width: "100%" }}>Edit</p>
@@ -298,9 +320,9 @@ export function ProjectDetailsPage() {
                             </div>
                             <div style={{ padding: "0 30px" }}>
                                 <div>
-                                    <h5 data-project-info="cardName">Example Project</h5>
+                                    <h5 data-project-info="cardName">{project.name}</h5>
                                     <p data-project-info="cardDescription">
-                                        Example Project stored in HTML
+                                        {project.description}
                                     </p>
                                 </div>
                                 <div
@@ -315,25 +337,25 @@ export function ProjectDetailsPage() {
                                         <p style={{ color: "#969696", fontSize: "var(--font-sm)" }}>
                                         Status
                                         </p>
-                                        <p data-project-info="cardStatus">Active</p>
+                                        <p data-project-info="cardStatus">{project.status}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#969696", fontSize: "var(--font-sm)" }}>
                                         Cost
                                         </p>
-                                        <p data-project-info="cardCost">$ 2'542.000</p>
+                                        <p data-project-info="cardCost">$ {project.cost}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#969696", fontSize: "var(--font-sm)" }}>
                                         Role
                                         </p>
-                                        <p data-project-info="cardUserRole">Engineer</p>
+                                        <p data-project-info="cardUserRole">{project.userRole}</p>
                                     </div>
                                     <div>
                                         <p style={{ color: "#969696", fontSize: "var(--font-sm)" }}>
                                         Finish Date
                                         </p>
-                                        <p data-project-info="cardFinishDate">2023-05-01</p>
+                                        <p data-project-info="cardFinishDate">{project.finishDate.toDateString()}</p>
                                     </div>
                                 </div>
                                 <div
@@ -346,13 +368,13 @@ export function ProjectDetailsPage() {
                                     <div
                                         data-project-info="cardProgress"
                                         style={{
-                                        width: "80%",
+                                        width: `${project.progress}%`,
                                         backgroundColor: "green",
                                         padding: "4px 0",
                                         textAlign: "center"
                                         }}
                                     >
-                                        80%
+                                        {project.progress}%
                                     </div>
                                 </div>
                             </div>

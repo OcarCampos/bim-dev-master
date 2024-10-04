@@ -1,9 +1,13 @@
-//Imports from React
+//Imports from React libraries
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
+import * as Router from 'react-router-dom';
+
+//Imports from react components
 import { Sidebar } from "./react-components/Sidebar";
 import { ProjectsPage } from "./react-components/ProjectsPage";
 import { ProjectDetailsPage } from "./react-components/ProjectDetailsPage";
+import { ProjectsManager } from './classes/ProjectsManager';
 
 //Imports from other js libraries.
 import { v4 as uuidv4 } from 'uuid';
@@ -15,15 +19,22 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
+//Create an instance of the ProjectsManager
+const projectsManager = new ProjectsManager();
+
 //Render the sidebar component into the sidebar div
 const rootElement = document.getElementById("app") as HTMLDivElement;
 const appRoot = ReactDOM.createRoot(rootElement);
 appRoot.render(
   //the following empty div is to fool react to render the components into the same hierachy as the html elements.
-  <> 
-    <Sidebar />
-    <ProjectsPage />
-    <ProjectDetailsPage />
+  <>
+    <Router.BrowserRouter> 
+      <Sidebar />
+      <Router.Routes>
+        <Router.Route path="/" element={<ProjectsPage projectsManager={projectsManager} />} />
+        <Router.Route path="/project/:id" element={<ProjectDetailsPage projectsManager={projectsManager} />} />
+      </Router.Routes>  
+    </Router.BrowserRouter>
   </>
 );
 
@@ -47,30 +58,6 @@ function toggleModal(id: string, action: 'open' | 'close', errorMessage?: string
     }
   } else {
     console.warn("The provided modal wasn't found. ID: ", id);
-  }
-}
-
-/*
- * Event Listeners for buttons: sidebar and others
- */
-function btnClick(buttonId: string, showPageId: string, hidePageId: string[]) {
-  const button = document.getElementById(buttonId);
-  if (button) {
-    button.addEventListener("click", () => {
-      const showPage = document.getElementById(showPageId);
-      if (showPage) {
-        showPage.style.display = "flex";
-      }
-
-      hidePageId.forEach(hidePageId => {
-        const hidePage = document.getElementById(hidePageId);
-        if (hidePage) {
-          hidePage.style.display = "none";
-        }
-      });
-    });
-  } else {
-    console.warn(`The button ${buttonId} was not found. Check the ID!`);
   }
 }
 
@@ -235,14 +222,9 @@ if (closeErrorModalBtn) {
 } 
 
 /*
- * Sidebar buttons
- */
-btnClick("users-btn", "project-users", ["projects-page", "project-details"]);
-btnClick("projects-btn", "projects-page", ["project-users", "project-details"]);
-
-/*
  * Three.js Setup
 */
+/*
 // Create a new scene
 const scene = new THREE.Scene();
 // Get the viewer container element
@@ -254,13 +236,14 @@ let camera: THREE.PerspectiveCamera;
 let renderer: THREE.WebGLRenderer;
 // Define the camera controls
 let cameraControls: OrbitControls;
-
+*/
 
 /*
  * Sets up the viewer
  * This function is called when the viewer container is resized or when the viewer is initialized
  * for the first time.
  */
+/*
 function setupViewer() {
   const containerDimensions = viewerContainer.getBoundingClientRect();
   const aspectRatio = containerDimensions.width / containerDimensions.height;
@@ -276,21 +259,24 @@ function setupViewer() {
   renderer.setSize(containerDimensions.width, containerDimensions.height); // Set the size of the renderer to match the container dimensions
   cameraControls = new OrbitControls(camera, viewerContainer); // Create new orbit controls for the camera
 }
+  */
 /*
  * Mesh to test the GUI
 */
+/*
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1); // Create a new box geometry with a size of 1x1x1
 const material = new THREE.MeshStandardMaterial(); // Create a new standard material
 const cube = new THREE.Mesh(boxGeometry, material); // Create a new mesh with the box geometry and material
-
+*/
 /*
  * Lights for the scene
 */
+/*
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);  
 directionalLight.position.set(0, 20, 0);
-
+*/
 
 /*
  * 4 Spot lights for the scene.
@@ -300,6 +286,7 @@ directionalLight.position.set(0, 20, 0);
  * 3. x: 0, y: 15, z: 15
  * 4. x: 0, y: 15, z: -15
 */
+/*
 const spotLight1 = new THREE.SpotLight(0xffffff, 1, 20, Math.PI * 0.1, 0.01);
 const spotLight2 = new THREE.SpotLight(0xffffff, 1, 20, Math.PI * 0.1, 0.01);
 const spotLight3 = new THREE.SpotLight(0xffffff, 1, 20, Math.PI * 0.1, 0.01);
@@ -316,6 +303,7 @@ scene.add(directionalLight, ambientLight, spotLight1, spotLight2, spotLight3, sp
 
 // Call the setupViewer() function for the first time to initialize the viewer 
 setupViewer(); 
+*/
 
 /*
  * Renders the scene
@@ -324,25 +312,28 @@ setupViewer();
  * Function doesn't crash the browser, because it's optimized by the browser itself.
  * Function is called after a first call when the window is resized.
  */
+/*
 function renderScene() {
   renderer.render(scene, camera); // Render the scene using the camera
   requestAnimationFrame(renderScene); // Call renderScene() again on the next animation frame to create a smooth animation effect
 }
-
+*/
 /*  
  * Event listener for when the window is resized.
  * Calls the setupViewer() function to make the container of the viewer responsive
  */
+/*
 window.addEventListener("resize", () => {
   setupViewer();
 });
 
 //Calls the renderScene() function to start the animation loop
 renderScene(); 
-
+*/
 /*
  * Adding helpers to the scene
 */
+/*
 const axesHelper = new THREE.AxesHelper(5); // Create a new axes helper with a length of 10
 scene.add(axesHelper); // Add the axes helper to the scene
 
@@ -354,7 +345,7 @@ gridHelper.material.color.set(0x00ff00); // Set the color of the grid helper to 
 const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight); // Create a new directional light helper
 scene.add(directionalLightHelper); // Add the directional light helper to the scene
 //scene.add(gridHelper); // Add the grid helper to the scene
-
+*/
 /*
 const spotLightHelper1 = new THREE.SpotLightHelper(spotLight1); // Create a new spot light helper
 scene.add(spotLightHelper1); // Add the spot light helper to the scene
@@ -370,8 +361,9 @@ scene.add(spotLightHelper4); // Add the spot light helper to the scene
  * GUI is used to add controls to the meshes and other
  * elements of the scene.
 */
+/*
 const gui = new GUI();
-
+*/
 /*
  * Cube controls. In M3-C2-L7 we got rid of the cube.
 */
@@ -393,6 +385,7 @@ cubeControls.addColor(cube.material, "color"); // Add a GUI control for the cube
 /*
  * Directional light controls
 */
+/*
 const dirLightControls = gui.addFolder("Directional Light"); // Create a new folder in the GUI for the directional light
 //controls for the directional light's position
 dirLightControls.add(directionalLight.position, "x").min(-100).max(100).step(1); // Add a GUI control for the directional light's x position
@@ -406,7 +399,7 @@ dirLightControls.add(directionalLight.rotation, "z").min(-Math.PI).max(Math.PI).
 dirLightControls.add(directionalLight, "intensity").min(0).max(1).step(0.01); // Add a GUI control for the directional light's intensity
 //control for the directional light's color
 dirLightControls.addColor(directionalLight, "color"); // Add a GUI control for the directional light's color
-
+*/
 /*
  * Importing OBJ model that comes with MTL file
 */
@@ -440,6 +433,7 @@ objLoader.load("assets/Gear/Gear1.obj", (object) => {
 /*
  * Importing a gltf model
 */
+/*
 const gltfLoader = new GLTFLoader();
 gltfLoader.load("assets/Explorer/scene.gltf", (object) => {
   scene.add(object.scene);
@@ -447,4 +441,4 @@ gltfLoader.load("assets/Explorer/scene.gltf", (object) => {
 }, undefined, (error) => {
   console.error(error);
 });
-
+*/

@@ -97,6 +97,11 @@ button:hover {
   row-gap: 15px;
 }
 
+#nav-buttons a{
+  color: white;
+  text-decoration: none;
+}
+
 #nav-buttons li {
   list-style-type: none;
   padding: 15px;
@@ -170,6 +175,11 @@ header {
   padding: 20px 40px;
   gap: 30px;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+#projects-list a{
+  color: white;
+  text-decoration: none;
 }
 
 .action-icon {

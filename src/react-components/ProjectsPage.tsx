@@ -1,24 +1,32 @@
+//Imports from React libraries
 import * as React from 'react';
+import * as Router from 'react-router-dom';
+
+//Imports from other js libraries.
 import { ProjectStatus, UserRole, IProject, Project } from '../classes/Project';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { ProjectCard } from './ProjectCard';
 
-export function ProjectsPage() {
-    //Instance of ProjectsManager to use in the component
-    //It's a react hook to keep the state of the projects list
-    //think of it as a global variable that doesn't change even if we access many times in the component
-    const [projectsManager] = React.useState(new ProjectsManager());
+interface Props {
+    projectsManager: ProjectsManager;
+}
 
+export function ProjectsPage(props: Props) {
     //Hook to keep UI updated with Projects list
-    const [projects, setProjects] = React.useState<Project[]>(projectsManager.list);
+    const [projects, setProjects] = React.useState<Project[]>(props.projectsManager.list);
     //Call the onProjectCreated function when a new project is created
-    projectsManager.onProjectCreated = () => {setProjects([...projectsManager.list])};
+    props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])};
     //Call the onProjectDeleted function when a project is deleted
-    projectsManager.onProjectDeleted = () => {setProjects([...projectsManager.list])};
+    props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])};
 
     //Iterating through projects list and creating a project card for each one
     const projectCards = projects.map((project) => {
-        return <ProjectCard key={project.id} project={project} />
+        return (
+            <Router.Link key={project.id} to={`/project/${project.id}`}>
+                <ProjectCard project={project} />
+            </Router.Link>
+
+        ) 
     });
     
     //Hook to update the list of projects when it changes
@@ -54,7 +62,7 @@ export function ProjectsPage() {
                 todos: []
             };
             try {
-                const project = projectsManager.newProject(projectData); //Creates a new project.
+                const project = props.projectsManager.newProject(projectData); //Creates a new project.
                 projectForm.reset();
                 const modal = document.getElementById('new-project-modal');
                 if (modal && modal instanceof HTMLDialogElement) {
@@ -79,15 +87,15 @@ export function ProjectsPage() {
     }
 
     //Function to handle the click on the import projects button
-    //use projectsManager.importFromJSON(); to upload projects from a JSON file
+    //use props.projectsManager.importFromJSON(); to upload projects from a JSON file
     const onImportProjectsClick = () => {
-        projectsManager.importFromJSON();
+        props.projectsManager.importFromJSON();
     }
 
     //Function to handle the click on the export projects button
-    //use projectsManager.exportToJSON(); to export the projects to a JSON file
+    //use props.projectsManager.exportToJSON(); to export the projects to a JSON file
     const onExportProjectsClick = () => {
-        projectsManager.exportToJSON();
+        props.projectsManager.exportToJSON();
     }
     
 

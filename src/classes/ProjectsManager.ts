@@ -20,8 +20,8 @@ export class ProjectsManager {
       status: "finished",
       userRole: "architect",
       finishDate: new Date("2023-12-31"),
-      cost: 0,
-      progress: 0,
+      cost: 252000,
+      progress: 75,
       todos: [
         {
           id: "todo-0",

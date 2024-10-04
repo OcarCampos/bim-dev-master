@@ -35,6 +35,14 @@ export class ProjectsManager {
     //this.list.push(project);
   }
 
+  filterProjects(searchTerm: string) {
+    const filteredProjects = this.list.filter((project) => {
+      return project.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    return filteredProjects;
+  }
+
+
   /*
    * Method to create a new project
    */

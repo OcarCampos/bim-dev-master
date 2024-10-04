@@ -6,6 +6,7 @@ import * as Router from 'react-router-dom';
 import { ProjectStatus, UserRole, IProject, Project } from '../classes/Project';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { ProjectCard } from './ProjectCard';
+import { SearchBox } from './SearchBox';
 
 interface Props {
     projectsManager: ProjectsManager;
@@ -97,6 +98,13 @@ export function ProjectsPage(props: Props) {
     const onExportProjectsClick = () => {
         props.projectsManager.exportToJSON();
     }
+
+    //Function for active search
+    const onProjectSearch = (searchTerm: string) => {
+        //It calls the filterProjects method inside the ProjectsManager class
+        //and updates the projects list with the filtered ones by calling the setProjects function
+        setProjects(props.projectsManager.filterProjects(searchTerm));
+    }
     
 
     return (
@@ -159,6 +167,8 @@ export function ProjectsPage(props: Props) {
                 <header>
                     {/* Title of the page */}
                     <h2>Projects List</h2>
+                    {/* Active Search Box */}
+                    <SearchBox onChange={(value) => onProjectSearch(value)} />
                     {/* Actions of the page */}
                     <div style={{display: 'flex', alignItems: 'center', columnGap: '15px'}}>
                         <span onClick={onImportProjectsClick} id="import-projects-btn" className="material-icons-round action-icon">file_upload</span>
@@ -166,11 +176,10 @@ export function ProjectsPage(props: Props) {
                         <button onClick={onNewProjectClick} id="new-project-btn"><span className="material-icons-round">add</span>New Project</button>
                     </div>
                 </header>
-                {/* Projects list */}
-                <div id="projects-list">
-                    {/* Projects are filled in dynamically here using React */}
-                    { projectCards }
-                </div>
+                {
+                    /* Projects list just if there are projects to display, otherwise show a message*/
+                    projects.length > 0 ? <div id="projects-list"> { projectCards } </div> : <h3>No projects found</h3>
+                }
         </div>
     );
 }

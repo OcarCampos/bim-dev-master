@@ -59,12 +59,12 @@ export class Project implements IProject {
   initials: string = "hc"; //Initials of the project HC are default.
 
   // Constructor for the project class
-  constructor(data: IProject) {
+  constructor(data: IProject, id = uuidv4() ) {
     // Iterating over the data object and assigning each property to the class instance
     for (const key in data) {
       this[key] = data[key];
     }
-    this.id = uuidv4(); //Generating a unique identifier for the project
+    this.id = id; //Generating a unique identifier for the project
     this.initials = this.name.split(' ').slice(0, 2).map(word => word[0]).join(''); // Generating the initials of the project using first two words
   }
 

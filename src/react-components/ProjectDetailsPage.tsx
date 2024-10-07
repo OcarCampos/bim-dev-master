@@ -4,6 +4,8 @@ import * as Router from 'react-router-dom';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { ThreeViewer } from './ThreeViewer';
 
+import { deleteDocument } from '../firebase';
+
 interface Props {
     projectsManager: ProjectsManager
 }
@@ -22,6 +24,13 @@ export function ProjectDetailsPage(props: Props) {
     if (!project) { 
         console.log('Project not found in project list.');
         return;
+    }
+
+    const navigateTo = Router.useNavigate();
+
+    props.projectsManager.onProjectDeleted = async (id) => {
+        await deleteDocument('/projects', id);
+        navigateTo('/');
     }
 
     return (
@@ -287,6 +296,7 @@ export function ProjectDetailsPage(props: Props) {
                             {project.description}
                         </p>
                     </div>
+                    <button onClick={() => {props.projectsManager.deleteProject(project.id)}} style={{backgroundColor: 'red'}}>Delete Project</button>
                 </header>
                 {/* Main content of the project details page*/}
                 <div className="main-page-content">

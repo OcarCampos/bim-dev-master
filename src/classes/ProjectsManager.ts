@@ -8,11 +8,13 @@ export class ProjectsManager {
   //these functions are called any time projects created/deleted/edited.
   //The code of the function is modified in the React component.
   onProjectCreated = (project: Project) => {};
-  onProjectDeleted = () => {};
+  onProjectDeleted = (id: string) => {};
 
   /*
    * Constructor for project cards
    */
+  // Deleted because firebase.
+  /*
   constructor() {
     this.newProject({    //Should be this.newProject()
       name: "Example Project",
@@ -34,6 +36,7 @@ export class ProjectsManager {
     });
     //this.list.push(project);
   }
+  */
 
   filterProjects(searchTerm: string) {
     const filteredProjects = this.list.filter((project) => {
@@ -46,7 +49,7 @@ export class ProjectsManager {
   /*
    * Method to create a new project
    */
-  newProject(data: IProject) {
+  newProject(data: IProject, id?: string) {
     //List of the names of the projects in the list
     const projectNames = this.list.map((project) => {
       return project.name;
@@ -60,7 +63,7 @@ export class ProjectsManager {
       throw new Error(`A project with the name "${data.name}" already exists. Try a different name.`);
     }
     //Creates a new project with the data provided
-    const project = new Project(data);
+    const project = new Project(data, id);
     this.list.push(project); //Adds the project to the list
     this.onProjectCreated(project); //Calls the onProjectCreated function
     return project; //Returns the project
@@ -261,7 +264,7 @@ export class ProjectsManager {
     });
     // Update the list with the remaining projects
     this.list = remaining;
-    this.onProjectDeleted();
+    this.onProjectDeleted(id);
   }
 
   /*

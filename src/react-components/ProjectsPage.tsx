@@ -2,23 +2,54 @@
 import * as React from 'react';
 import * as Router from 'react-router-dom';
 
+//Import for firestore
+import * as Firestore from "firebase/firestore";
+
 //Imports from other js libraries.
 import { ProjectStatus, UserRole, IProject, Project } from '../classes/Project';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { ProjectCard } from './ProjectCard';
 import { SearchBox } from './SearchBox';
 
+//Import firebase DB from index.ts under firebase folder.
+import { getCollection } from '../firebase';
+
 interface Props {
     projectsManager: ProjectsManager;
 }
+
+const projectCollection = getCollection<IProject>("/projects");
 
 export function ProjectsPage(props: Props) {
     //Hook to keep UI updated with Projects list
     const [projects, setProjects] = React.useState<Project[]>(props.projectsManager.list);
     //Call the onProjectCreated function when a new project is created
     props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])};
-    //Call the onProjectDeleted function when a project is deleted
-    props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])};
+
+    //Function to get Firestore projects
+    const getFirestoreProjects = async () => {
+        const firebaseProjects = await Firestore.getDocs(projectCollection);
+        //Retrieving actual information and iterating through it
+        for (const doc of firebaseProjects.docs) {
+            const data = doc.data();
+            const project: IProject = {
+                ...data,
+                finishDate: (data.finishDate as unknown as Firestore.Timestamp).toDate()
+            }
+            try {
+                props.projectsManager.newProject(project, doc.id);
+            } catch (err) {
+                //To Do: update the existing projects with the data coming from firebase
+            }
+        }
+    }
+
+
+    //Invoque te useEffect hook to update the list of projects from firestore
+    React.useEffect(() => {
+        getFirestoreProjects();
+    }, []);
+
 
     //Iterating through projects list and creating a project card for each one
     const projectCards = projects.map((project) => {
@@ -63,6 +94,7 @@ export function ProjectsPage(props: Props) {
                 todos: []
             };
             try {
+                Firestore.addDoc(projectCollection, projectData);
                 const project = props.projectsManager.newProject(projectData); //Creates a new project.
                 projectForm.reset();
                 const modal = document.getElementById('new-project-modal');
